@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KARAOKE JEWELRY</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;width:100%;}
+a,a:visited,a:active{color:inherit;text-decoration:none;}
+
+.mq{background:#fff;border-bottom:1px solid #e0e0e0;overflow:hidden;white-space:nowrap;padding:9px 0;}
+.mq-inner{display:inline-block;animation:mq 40s linear infinite;}
+.mq-inner span{font-size:11px;letter-spacing:.06em;margin:0 28px;color:#111;text-transform:uppercase;}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:46px;position:fixed;top:0;left:0;right:0;z-index:100;background:linear-gradient(to bottom,#ffffff,#22E033);border-bottom:1px solid #111;transition:background .3s;}
+.nav.scrolled{background:#fff;}
+.nav-l,.nav-r{display:flex;gap:20px;align-items:center;}
+.nav-l a,.nav-r a,.nav-r button{font-size:11px;letter-spacing:.07em;color:#111;text-decoration:none;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-transform:uppercase;}
+.nav-sep{font-size:12px;color:#555;}
+.nav-logo{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-logo img{height:22px;display:block;}
+.cart-btn{position:relative;}
+.cbadge{position:absolute;top:-5px;right:-10px;background:#22E033;color:#111;font-size:9px;border-radius:50%;width:13px;height:13px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+.hero{background:#111 url('Brand Asset/HERO/leoc9208.png') center/cover no-repeat;min-height:100vh;position:relative;border:1px solid #111;}
+.hero-symbol{width:260px;opacity:.08;position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);pointer-events:none;user-select:none;}
+.hero-content{text-align:center;position:relative;z-index:1;padding:60px 20px;}
+.hero-logo{height:30px;margin:0 auto 30px;display:block;}
+.hero-eyebrow{font-size:10px;letter-spacing:.28em;color:#555;text-transform:uppercase;margin-bottom:10px;}
+.hero-title{font-size:clamp(30px,5.5vw,60px);letter-spacing:.2em;color:#fff;font-weight:300;text-transform:uppercase;line-height:1.05;}
+.hero-sub{font-size:10px;letter-spacing:.2em;color:#555;margin-top:14px;text-transform:uppercase;}
+.hero-cta{display:inline-block;margin-top:36px;padding:11px 30px;border:1px solid #444;color:#999;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;background:none;font-family:inherit;transition:border-color .2s,color .2s;}
+.hero-cta:hover{border-color:#fff;color:#fff;}
+
+.section-hdr{padding:14px 20px 6px;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:#111;}
+
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #111;border-left:1px solid #111;}
+.prod-card{border-right:1px solid #111;border-bottom:1px solid #111;cursor:pointer;background:#fff;position:relative;overflow:hidden;}
+.prod-img{aspect-ratio:1/1;position:relative;overflow:hidden;background:#fff;}
+.img-default,.img-hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease;}
+.img-default img,.img-hover img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-default{opacity:1;}
+.img-hover{opacity:0;}
+.prod-card:hover .img-default{opacity:0;}
+.prod-card:hover .img-hover{opacity:1;}
+.prod-label{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-end;padding:10px 14px;transition:opacity .25s ease;pointer-events:none;}
+.prod-card:hover .prod-label{opacity:0;}
+.prod-name{font-size:12px;letter-spacing:.04em;color:#111;font-weight:400;}
+.prod-price{font-size:12px;letter-spacing:.02em;color:#111;text-align:right;white-space:nowrap;}
+
+.footer{border-top:1px solid #111;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+.footer-links a,.footer-ig{font-size:15px;letter-spacing:.01em;color:#888;text-decoration:none;}
+.footer-links a:hover,.footer-ig:hover{color:#111;}
+
+.cart-overlay-wrap{position:relative;min-height:0;}
+.cart-overlay-wrap.open{min-height:420px;}
+.cart-scrim{display:none;position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:10;}
+.cart-overlay-wrap.open .cart-scrim{display:block;}
+.cart-panel{position:absolute;top:0;right:0;width:320px;background:#fff;border-left:1px solid #e0e0e0;z-index:11;display:none;}
+.cart-overlay-wrap.open .cart-panel{display:block;}
+.chdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e0e0e0;}
+.chdr span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;}
+.cclose{background:none;border:none;font-size:20px;cursor:pointer;color:#111;line-height:1;}
+.cbody{padding:18px;}
+.cempty{font-size:11px;color:#aaa;letter-spacing:.05em;text-align:center;padding:28px 0;}
+.citem{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eee;}
+.cthumb{width:48px;height:48px;background:#f7f7f7;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.cinfo{flex:1;}
+.cname{font-size:11px;letter-spacing:.04em;margin-bottom:3px;}
+.cprice{font-size:11px;color:#888;}
+.crm{background:none;border:none;font-size:10px;color:#bbb;cursor:pointer;text-decoration:underline;margin-top:3px;display:block;}
+.cfoot{padding:14px 18px;border-top:1px solid #e0e0e0;}
+.ctrow{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.04em;margin-bottom:10px;}
+.cship{font-size:10px;color:#aaa;margin-bottom:12px;}
+.cbtn{width:100%;padding:12px;background:#111;color:#fff;border:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+.cbtn:hover{background:#222;}
+.toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:10px;letter-spacing:.1em;padding:7px 14px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:20;}
+.toast.show{opacity:1;}
+
+.notif-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to bottom,#ffffff 40%,rgba(34,224,51,0.35) 100%);border-top:1px solid #111;z-index:200;overflow:hidden;white-space:nowrap;padding:10px 0;}
+.notif-inner{display:inline-block;animation:mq 80s linear infinite;}
+.notif-inner span{font-size:13px;letter-spacing:.05em;margin:0 32px;color:#111;}
+body{padding-bottom:42px;}
+
+@media(max-width:768px){
+  .nav-l{display:none;}
+  .nav-r a{display:none;}
+  .nav-r .cart-btn{display:flex;}
+  .nav-sep{display:none;}
+  .nav{justify-content:flex-end;}
+  .nav-logo img{height:17px;}
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+  .hero{min-height:55vh;}
+  .hero-symbol{width:220px;}
+  .footer{flex-direction:column;align-items:flex-start;gap:12px;}
+  .footer-links{gap:12px;}
+  .cart-panel{width:100%;position:fixed;top:0;right:0;bottom:0;border-left:none;}
+  .cart-overlay-wrap.open{min-height:0;}
+  .cart-scrim{position:fixed;}
+}
+@media(max-width:480px){
+  .hero-title{letter-spacing:.1em;}
+  .hero-logo{height:20px;}
+}
+</style>
+</head>
+<body>
+
+
+<div style="position:relative;">
+
+  <nav class="nav">
+    <div class="nav-l">
+      <a href="shop.html">shop</a>
+      <a>collections</a>
+      <a>custom</a>
+    </div>
+    <div class="nav-logo">
+      <img src="Brand Asset/logo/LOGO_NGANG_BLACK.png" alt="KARAOKE JEWELRY">
+    </div>
+    <div class="nav-r">
+      <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
+      <a>about</a>
+      <span class="nav-sep">|</span>
+      <button class="cart-btn" onclick="toggleCart()">
+        Cart
+        <span class="cbadge" id="cbadge" style="display:none">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="hero"></div>
+
+  <div class="section-hdr" id="shop">Popular</div>
+  <div class="prod-grid" id="prodGrid"></div>
+
+  <div class="footer">
+    <div class="footer-links">
+      <a href="#">refund policy</a>
+      <a href="#">privacy policy</a>
+      <a href="#">terms of service</a>
+      <a href="#">shipping policy</a>
+      <a href="#">legal notice</a>
+      <a href="#">contact information</a>
+    </div>
+    <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
+  </div>
+
+  <div class="cart-overlay-wrap" id="cartWrap">
+    <div class="cart-scrim" onclick="toggleCart()"></div>
+    <div class="cart-panel">
+      <div class="chdr"><span>Your cart</span><button class="cclose" onclick="toggleCart()">&#215;</button></div>
+      <div class="cbody" id="cartBody"><p class="cempty">Your cart is empty</p></div>
+      <div class="cfoot" id="cartFoot" style="display:none">
+        <div class="ctrow"><span>Estimated total</span><span id="cartTotal">&#8363;0</span></div>
+        <div class="cship">Tax included. Shipping calculated at checkout.</div>
+        <button class="cbtn">Check out</button>
+      </div>
+    </div>
+    <div class="toast" id="toast">Added to cart</div>
+  </div>
+
+</div>
+
+<script>
+const products=[
+  {id:1,name:"Nhẫn ghẹ",price:"1.400.000&#8363;",
+   imgA:"https://framerusercontent.com/images/3bSW34nCvbZxO3rDaoWCM2peA.png",
+   imgB:"https://framerusercontent.com/images/TQgED9ot0QJaxvOWBoc9JZHJogg.jpg"},
+  {id:2,name:"Nhẫn tăm",price:"1.800.000&#8363;",
+   imgA:"https://framerusercontent.com/images/GE3EKWl3WfCrKCbicdzulbiYQ.png",
+   imgB:"https://framerusercontent.com/images/RYmES6u40TXRNYrXBHQf7yCOF4.jpg"},
+  {id:3,name:"Nhẫn gạch nhất",price:"2.100.000&#8363;",
+   imgA:"https://framerusercontent.com/images/iZsJhSaKJXM9TZHFA8hLFUk4oRw.png",
+   imgB:"https://framerusercontent.com/images/mlhK7Ariz8L3ylzn0GmKoK697zc.png"},
+  {id:4,name:"Cá Ngựa Charm",price:"3.500.000&#8363;",
+   imgA:"https://i.ibb.co/xttGJSJz/Screenshot-2026-04-22-173503.png",
+   imgB:"https://i.ibb.co/PnG321W/Untitled-Catalog1175.png"},
+  {id:5,name:"Chuyền KIM uốn",price:"1.900.000&#8363;",
+   imgA:"https://i.ibb.co/NnSDPLqq/bong-kim-cuc-bg.png",
+   imgB:"https://i.ibb.co/TZQLg82/image.png"},
+  {id:6,name:"Nhẫn kim uốn",price:"1.550.000&#8363;",
+   imgA:"https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png",
+   imgB:"https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png"},
+  {id:7,name:"Bông tăm",price:"950.000&#8363;",
+   imgA:"https://cdn.phototourl.com/free/2026-04-22-838af2c2-996a-4623-a36b-578391792881.jpg",
+   imgB:"https://cdn.phototourl.com/free/2026-04-22-050fcff1-8509-452c-bc92-794fb7094cc7.jpg"},
+  {id:8,name:"Chuyền gạch ống",price:"3.060.000&#8363;",
+   imgA:"https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png",
+   imgB:"https://framerusercontent.com/images/Bjxo6wcZEuGFHJYILOs1AMendkY.png"},
+];
+
+let cart=[];
+let cartOpen=false;
+
+function renderGrid(){
+  document.getElementById('prodGrid').innerHTML=products.map(p=>`
+    <div class="prod-card" onclick="addToCart(${p.id})">
+      <div class="prod-img">
+        <div class="img-default"><img src="${p.imgA}" alt="${p.name}"></div>
+        <div class="img-hover"><img src="${p.imgB}" alt="${p.name}"></div>
+        <div class="prod-label">
+          <span class="prod-name">${p.name}</span>
+          <span class="prod-price">from ${p.price}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(id){
+  const p=products.find(x=>x.id===id);
+  const ex=cart.find(x=>x.id===id);
+  if(ex)ex.qty++;else cart.push({...p,qty:1});
+  updateBadge();
+  showToast();
+}
+function removeFromCart(id){
+  cart=cart.filter(x=>x.id!==id);
+  updateBadge();
+  renderCartItems();
+}
+function updateBadge(){
+  const n=cart.reduce((s,x)=>s+x.qty,0);
+  const b=document.getElementById('cbadge');
+  b.style.display=n?'flex':'none';
+  b.textContent=n;
+  document.getElementById('cartFoot').style.display=cart.length?'block':'none';
+}
+function renderCartItems(){
+  const b=document.getElementById('cartBody');
+  if(!cart.length){b.innerHTML='<p class="cempty">Your cart is empty</p>';return;}
+  b.innerHTML=cart.map(item=>`
+    <div class="citem">
+      <div class="cthumb">${item.svgA.replace('<svg','<svg style="width:36px;height:36px;"')}</div>
+      <div class="cinfo">
+        <div class="cname">${item.name}${item.qty>1?' x'+item.qty:''}</div>
+        <div class="cprice">from ${item.price}</div>
+        <button class="crm" onclick="removeFromCart(${item.id})">remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleCart(){
+  cartOpen=!cartOpen;
+  document.getElementById('cartWrap').className='cart-overlay-wrap'+(cartOpen?' open':'');
+  if(cartOpen)renderCartItems();
+}
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1600);
+}
+
+renderGrid();
+
+const navEl=document.querySelector('.nav');
+function updateNav(){
+  const heroH=document.querySelector('.hero').offsetHeight;
+  navEl.classList.toggle('scrolled',window.scrollY>=heroH-10);
+}
+window.addEventListener('scroll',updateNav,{passive:true});
+updateNav();
+</script>
+
+<div class="notif-bar">
+  <div class="notif-inner">
+    <span>Trang web n&#224;y ch&#7881; &#273;&#7875; xem gi&#225;, kh&#244;ng h&#7895; tr&#7907; &#273;&#7863;t h&#224;ng. Vui l&#242;ng li&#234;n h&#7879; Instagram C&#224; R&#225; &#273;&#7875; mua h&#224;ng.</span>
+    <span>&#8212;</span>
+    <span>This website is for price viewing only and does not support ordering. Please contact C&#224; R&#225; on Instagram to make a purchase.</span>
+    <span>&#8212;</span>
+    <span>Trang web n&#224;y ch&#7881; &#273;&#7875; xem gi&#225;, kh&#244;ng h&#7895; tr&#7907; &#273;&#7863;t h&#224;ng. Vui l&#242;ng li&#234;n h&#7879; Instagram C&#224; R&#225; &#273;&#7875; mua h&#224;ng.</span>
+    <span>&#8212;</span>
+    <span>This website is for price viewing only and does not support ordering. Please contact C&#224; R&#225; on Instagram to make a purchase.</span>
+    <span>&#8212;</span>
+  </div>
+</div>
+</body>
+</html>
