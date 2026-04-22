@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shop — KARAOKE JEWELRY</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;width:100%;}
+a,a:visited,a:active{color:inherit;text-decoration:none;}
+
+.mq{background:#fff;border-bottom:1px solid #e0e0e0;overflow:hidden;white-space:nowrap;padding:9px 0;}
+.mq-inner{display:inline-block;animation:mq 40s linear infinite;}
+.mq-inner span{font-size:11px;letter-spacing:.06em;margin:0 28px;color:#111;text-transform:uppercase;}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:46px;position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #111;}
+.nav-l,.nav-r{display:flex;gap:20px;align-items:center;}
+.nav-l a,.nav-r a,.nav-r button{font-size:11px;letter-spacing:.07em;color:#111;text-decoration:none;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-transform:uppercase;}
+.nav-l a.active{border-bottom:1px solid #111;}
+.nav-sep{font-size:12px;color:#555;}
+.nav-logo{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-logo img{height:22px;display:block;}
+.cart-btn{position:relative;}
+.cbadge{position:absolute;top:-5px;right:-10px;background:#22E033;color:#111;font-size:9px;border-radius:50%;width:13px;height:13px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+/* Category filters */
+.filter-bar{display:flex;gap:24px;padding:12px 20px;border-bottom:1px solid #e0e0e0;overflow-x:auto;scrollbar-width:none;margin-top:46px;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-btn{font-size:12px;letter-spacing:.04em;background:none;border:none;cursor:pointer;font-family:inherit;color:#111;padding:0;white-space:nowrap;flex-shrink:0;}
+.filter-btn.active{text-decoration:underline;}
+.filter-btn:hover{opacity:.6;}
+
+/* Product grid */
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #111;border-left:1px solid #111;}
+.prod-card{border-right:1px solid #111;border-bottom:1px solid #111;cursor:pointer;background:#fff;position:relative;overflow:hidden;}
+.prod-card.hidden{display:none;}
+.prod-img{aspect-ratio:1/1;position:relative;overflow:hidden;background:#f9f9f9;opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease;}
+.prod-card.visible .prod-img{opacity:1;transform:translateY(0);}
+.img-default,.img-hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease;}
+.img-default img,.img-hover img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-default{opacity:1;}
+.img-hover{opacity:0;}
+.prod-card:hover .img-default{opacity:0;}
+.prod-card:hover .img-hover{opacity:1;}
+.img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f5f5f5;}
+.img-placeholder img{width:40px;height:40px;opacity:.15;}
+.prod-label{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-end;padding:10px 14px;transition:opacity .25s ease;pointer-events:none;}
+.prod-card:hover .prod-label{opacity:0;}
+.prod-name{font-size:12px;letter-spacing:.04em;color:#111;font-weight:400;}
+.prod-price{font-size:12px;letter-spacing:.02em;color:#111;text-align:right;white-space:nowrap;}
+
+
+.footer{border-top:1px solid #111;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:0;}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+.footer-links a,.footer-ig{font-size:15px;letter-spacing:.01em;color:#888;text-decoration:none;}
+.footer-links a:hover,.footer-ig:hover{color:#111;}
+
+.cart-overlay-wrap{position:fixed;inset:0;pointer-events:none;z-index:200;}
+.cart-overlay-wrap.open{pointer-events:auto;}
+.cart-scrim{display:none;position:absolute;inset:0;background:rgba(0,0,0,.28);}
+.cart-overlay-wrap.open .cart-scrim{display:block;}
+.cart-panel{position:absolute;top:0;right:0;width:320px;height:100%;background:#fff;border-left:1px solid #e0e0e0;display:none;overflow-y:auto;}
+.cart-overlay-wrap.open .cart-panel{display:flex;flex-direction:column;}
+.chdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e0e0e0;}
+.chdr span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;}
+.cclose{background:none;border:none;font-size:20px;cursor:pointer;color:#111;line-height:1;}
+.cbody{padding:18px;flex:1;}
+.cempty{font-size:11px;color:#aaa;letter-spacing:.05em;text-align:center;padding:28px 0;}
+.citem{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eee;}
+.cthumb{width:48px;height:48px;background:#f7f7f7;flex-shrink:0;overflow:hidden;}
+.cthumb img{width:100%;height:100%;object-fit:cover;}
+.cinfo{flex:1;}
+.cname{font-size:11px;letter-spacing:.04em;margin-bottom:3px;}
+.cprice{font-size:11px;color:#888;}
+.crm{background:none;border:none;font-size:10px;color:#bbb;cursor:pointer;text-decoration:underline;margin-top:3px;display:block;}
+.cfoot{padding:14px 18px;border-top:1px solid #e0e0e0;}
+.ctrow{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.04em;margin-bottom:10px;}
+.cship{font-size:10px;color:#aaa;margin-bottom:12px;}
+.cbtn{width:100%;padding:12px;background:#111;color:#fff;border:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+.cbtn:hover{background:#222;}
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:10px;letter-spacing:.1em;padding:7px 14px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:300;}
+.toast.show{opacity:1;}
+
+.notif-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to bottom,#ffffff 40%,rgba(34,224,51,0.35) 100%);border-top:1px solid #111;z-index:200;overflow:hidden;white-space:nowrap;padding:10px 0;}
+.notif-inner{display:inline-block;animation:mq 80s linear infinite;}
+.notif-inner span{font-size:13px;letter-spacing:.05em;margin:0 32px;color:#111;}
+body{padding-bottom:42px;}
+
+@media(max-width:768px){
+  .nav-l{display:none;}
+  .nav-r a{display:none;}
+  .nav-r .cart-btn{display:flex;}
+  .nav-sep{display:none;}
+  .nav{justify-content:flex-end;}
+  .nav-logo img{height:17px;}
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+  .cart-panel{width:100%;}
+  .footer{flex-direction:column;align-items:flex-start;gap:12px;}
+  .footer-links{gap:12px;}
+}
+@media(max-width:480px){
+  .shop-title{letter-spacing:.15em;}
+  .filter-btn{padding:10px 12px;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-l">
+    <a href="shop.html" class="active">shop</a>
+    <a href="#">collections</a>
+    <a href="#">custom</a>
+  </div>
+  <div class="nav-logo">
+    <a href="KARA_WEBSITE_DRAFT.html">
+      <img src="Brand Asset/logo/LOGO_NGANG_BLACK.png" alt="KARAOKE JEWELRY">
+    </a>
+  </div>
+  <div class="nav-r">
+    <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
+    <a href="#">about</a>
+    <span class="nav-sep">|</span>
+    <button class="cart-btn" onclick="toggleCart()">
+      Cart
+      <span class="cbadge" id="cbadge" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-cat="all">all</button>
+  <button class="filter-btn" data-cat="Bông tai">ears</button>
+  <button class="filter-btn" data-cat="Dây Chuyền">neck</button>
+  <button class="filter-btn" data-cat="Vòng Tay">wrist</button>
+  <button class="filter-btn" data-cat="Nhẫn">fingers</button>
+  <button class="filter-btn" data-cat="Charm">charm</button>
+</div>
+
+<div class="prod-grid" id="prodGrid"></div>
+
+<div class="footer">
+  <div class="footer-links">
+    <a href="#">refund policy</a>
+    <a href="#">privacy policy</a>
+    <a href="#">terms of service</a>
+    <a href="#">shipping policy</a>
+    <a href="#">contact</a>
+  </div>
+  <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
+</div>
+
+<div class="cart-overlay-wrap" id="cartWrap">
+  <div class="cart-scrim" onclick="toggleCart()"></div>
+  <div class="cart-panel">
+    <div class="chdr"><span>Your cart</span><button class="cclose" onclick="toggleCart()">&#215;</button></div>
+    <div class="cbody" id="cartBody"><p class="cempty">Your cart is empty</p></div>
+    <div class="cfoot" id="cartFoot" style="display:none">
+      <div class="ctrow"><span>Estimated total</span><span id="cartTotal">&#8363;0</span></div>
+      <div class="cship">Tax included. Shipping calculated at checkout.</div>
+      <button class="cbtn">Check out</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">Added to cart</div>
+
+<div class="notif-bar">
+  <div class="notif-inner">
+    <span>Trang web này chỉ để xem giá, không hỗ trợ đặt hàng. Vui lòng liên hệ Instagram Cà Rá để mua hàng.</span>
+    <span>&mdash;</span>
+    <span>This website is for price viewing only. Please contact Cà Rá on Instagram to purchase.</span>
+    <span>&mdash;</span>
+    <span>Trang web này chỉ để xem giá, không hỗ trợ đặt hàng. Vui lòng liên hệ Instagram Cà Rá để mua hàng.</span>
+    <span>&mdash;</span>
+    <span>This website is for price viewing only. Please contact Cà Rá on Instagram to purchase.</span>
+    <span>&mdash;</span>
+  </div>
+</div>
+
+<script>
+
+const products = [
+  {id:1,  cat:'Bông tai',   name:'Bông Móng Ngựa',   price:'675.000',    imgA:'https://i.ibb.co/p6Lp0h2t/Untitled-Catalog1279.png',                                imgB:'https://i.ibb.co/rR4bKs1z/Untitled-Catalog1266.png'},
+  {id:2,  cat:'Dây Chuyền', name:'Chuyền Cá Ngựa',   price:'2.640.000',  imgA:'https://cdn2-retail-images.kiotviet.vn/2026/03/13/tskaraoke/e720f3fb29cb4d189f3ad219e0aa02f0.png', imgB:''},
+  {id:3,  cat:'Charm',      name:'Cá Ngựa Charm',     price:'3.500.000',  imgA:'https://i.ibb.co/xttGJSJz/Screenshot-2026-04-22-173503.png',                       imgB:'https://i.ibb.co/PnG321W/Untitled-Catalog1175.png'},
+  {id:4,  cat:'Nhẫn',       name:'Nhẫn Cà Rá',        price:'1.650.000',  imgA:'https://framerusercontent.com/images/FmgnNcI1oJR5Bg5QCCoqSwbhwc.png',              imgB:''},
+  {id:5,  cat:'Bông tai',   name:'Bông Kim Uốn',      price:'1.500.000',  imgA:'https://framerusercontent.com/images/DMXDggiNTUkw0Pe1mZps5F5DGHs.png',             imgB:'https://framerusercontent.com/images/PsENHslvQMvNWbE18oZwMVZih8.png'},
+  {id:6,  cat:'Dây Chuyền', name:'Chuyền Gạch Ống',   price:'3.060.000',  imgA:'https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png',             imgB:'https://framerusercontent.com/images/Bjxo6wcZEuGFHJYILOs1AMendkY.png'},
+  {id:7,  cat:'Dây Chuyền', name:'Chuyền Gạch',       price:'3.125.000',  imgA:'https://framerusercontent.com/images/OXOySkgKmAJvpKmwh8J24CyUJww.png',             imgB:''},
+  {id:8,  cat:'Charm',      name:'Charm Mặt Gạch',    price:'1.800.000',  imgA:'https://framerusercontent.com/images/OXOySkgKmAJvpKmwh8J24CyUJww.png',             imgB:''},
+  {id:9,  cat:'Charm',      name:'Charm Gạch Ống',    price:'2.500.000',  imgA:'https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png',             imgB:''},
+  {id:10, cat:'Nhẫn',       name:'Nhẫn Gạch Nhất',    price:'2.100.000',  imgA:'https://framerusercontent.com/images/iZsJhSaKJXM9TZHFA8hLFUk4oRw.png',             imgB:'https://framerusercontent.com/images/mlhK7Ariz8L3ylzn0GmKoK697zc.png'},
+  {id:11, cat:'Nhẫn',       name:'Nhẫn Gạch Nam',     price:'2.800.000',  imgA:'https://framerusercontent.com/images/25qyKQkXNfh7QZtXNM0cmEgxN04.png',             imgB:'https://framerusercontent.com/images/iWD7gGFl8OMV2SHTI5drNcQVEa8.png'},
+  {id:12, cat:'Bông tai',   name:'Bông Kim Cúc',      price:'1.500.000',  imgA:'https://framerusercontent.com/images/DMXDggiNTUkw0Pe1mZps5F5DGHs.png',             imgB:'https://framerusercontent.com/images/PsENHslvQMvNWbE18oZwMVZih8.png'},
+  {id:13, cat:'Dây Chuyền', name:'Chuyền Kim Uốn',    price:'1.900.000',  imgA:'https://i.ibb.co/NnSDPLqq/bong-kim-cuc-bg.png',                                    imgB:'https://i.ibb.co/TZQLg82/image.png'},
+  {id:14, cat:'Charm',      name:'Charm Kim Uốn',     price:'1.300.000',  imgA:'',                                                                                  imgB:''},
+  {id:15, cat:'Nhẫn',       name:'Nhẫn Kim Uốn',      price:'1.550.000',  imgA:'https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png',             imgB:''},
+  {id:16, cat:'Charm',      name:'Charm Kim Cúc',     price:'1.300.000',  imgA:'',                                                                                  imgB:''},
+  {id:17, cat:'Nhẫn',       name:'Nhẫn Kim Cúc',      price:'1.320.000',  imgA:'https://framerusercontent.com/images/st6vjpLEbAW6C7TQ4gWxw0RdXM.png',             imgB:'https://framerusercontent.com/images/E7z9NTEWhx1BE8u9npnBpqVJ3o.png'},
+  {id:18, cat:'Nhẫn',       name:'Nhẫn Kim Nữ',       price:'1.150.000',  imgA:'https://framerusercontent.com/images/9OZ91GZ9OsHG2SZQPmdsueAT4Y.png',             imgB:'https://framerusercontent.com/images/llevzRIhG90jLtsQT6vBBj8Y.png'},
+  {id:19, cat:'Nhẫn',       name:'Nhẫn Kim Nam',      price:'1.800.000',  imgA:'https://framerusercontent.com/images/4of5Wew2wsWsPr4mgv6iXCWDI.png',              imgB:'https://framerusercontent.com/images/QKOGsfbYZuZoh1GAqdzV0Q7MQ.png'},
+  {id:20, cat:'Bông tai',   name:'Bông Nhện',         price:'900.000',    imgA:'https://framerusercontent.com/images/luPOvhY5pN6vuVDCSxdaHxrNJE.png',             imgB:'https://framerusercontent.com/images/fPWJo0n4bvJJcYn86iu80ZOK30.png'},
+  {id:21, cat:'Nhẫn',       name:'Nhẫn Trứng',        price:'2.100.000',  imgA:'https://framerusercontent.com/images/0kLFzRyVfeqACuJSpXoyLHZf68.jpg',             imgB:'https://framerusercontent.com/images/em8WfMJgZUmRIVXrUKoe9sEdpk.png'},
+  {id:22, cat:'Nhẫn',       name:'Nhẫn Trăng',        price:'1.750.000',  imgA:'https://framerusercontent.com/images/nd9yDZtv8s0Gcs468tkrkTww.jpg',               imgB:'https://framerusercontent.com/images/YO3Rmg4RjlPNoPYlrBpyfxxl6c.png'},
+  {id:23, cat:'Vòng Tay',   name:'Bay Lắc',           price:'3.700.000',  imgA:'https://framerusercontent.com/images/5Wck3AUWdv2JXnAtOsrxp5SOI.jpg',              imgB:'https://framerusercontent.com/images/Ii8b1P4vWchaMxrvjGa9JTPA8.png'},
+  {id:24, cat:'Charm',      name:'Charm Cá',          price:'1.780.000',  imgA:'https://framerusercontent.com/images/uwnE6jG06ZQjE2uILuU3okyc.jpg',              imgB:'https://framerusercontent.com/images/6zQU5LNYMOj535KzxVuapw7PHk.png'},
+  {id:25, cat:'Charm',      name:'Charm Lon',         price:'1.700.000',  imgA:'https://framerusercontent.com/images/EP5XJ9jnFPo7BFum7ZAvtKM.jpg',               imgB:'https://framerusercontent.com/images/E9I7cgSOdUA1jDhSJlkkEQwE8.jpg'},
+  {id:26, cat:'Bông tai',   name:'Bông Lon',          price:'1.800.000',  imgA:'',                                                                                  imgB:''},
+  {id:27, cat:'Bông tai',   name:'Khoen Tròn',        price:'250.000',    imgA:'',                                                                                  imgB:''},
+  {id:28, cat:'Dây Chuyền', name:'Dây Mì Nhỏ',        price:'625.000',    imgA:'',                                                                                  imgB:''},
+  {id:29, cat:'Bông tai',   name:'Bông Ốc Len',       price:'950.000',    imgA:'https://framerusercontent.com/images/vC46TZneo6eWBS5HMCbY6wCHk.png',              imgB:'https://framerusercontent.com/images/pON5GpBmkrvakoF96dgIgfHS5Y.jpg'},
+  {id:30, cat:'Charm',      name:'Mặt Ốc Len',        price:'850.000',    imgA:'https://framerusercontent.com/images/vC46TZneo6eWBS5HMCbY6wCHk.png',              imgB:'https://framerusercontent.com/images/pON5GpBmkrvakoF96dgIgfHS5Y.jpg'},
+  {id:31, cat:'Dây Chuyền', name:'Chuyền Ốc Len',     price:'1.150.000',  imgA:'https://framerusercontent.com/images/v3OIGpzPhFrqyIQE0sW44q06EhE.png',            imgB:'https://framerusercontent.com/images/bd3X504afeqDPCpoIyHYzsPVL4.jpg'},
+  {id:32, cat:'Dây Chuyền', name:'Chuyền Ghẹ',        price:'1.700.000',  imgA:'https://framerusercontent.com/images/Yhw4Opm6BDOOgnKh3iwRNvAMBVY.png',            imgB:'https://framerusercontent.com/images/PdBcyQ6jgKTNYQMCC24ggtdHDKA.jpg'},
+  {id:33, cat:'Bông tai',   name:'Bông Ghẹ Nhỏ',      price:'450.000',    imgA:'https://framerusercontent.com/images/8CZSFEHIjiIx9uC9rF4OpyJM2Ow.png',            imgB:''},
+  {id:34, cat:'Bông tai',   name:'Bông Ghẹ To',       price:'1.300.000',  imgA:'https://framerusercontent.com/images/J9G5sghacua6lFu2w1oD3hAqhw.png',             imgB:'https://framerusercontent.com/images/VR6DLCU8w9mQMM2Bxee49tKynHw.jpg'},
+  {id:35, cat:'Charm',      name:'Mặt Ghẹ',           price:'1.000.000',  imgA:'https://framerusercontent.com/images/J9G5sghacua6lFu2w1oD3hAqhw.png',             imgB:'https://framerusercontent.com/images/VR6DLCU8w9mQMM2Bxee49tKynHw.jpg'},
+  {id:36, cat:'Nhẫn',       name:'Nhẫn Ghẹ',          price:'1.400.000',  imgA:'https://framerusercontent.com/images/3bSW34nCvbZxO3rDaoWCM2peA.png',              imgB:'https://framerusercontent.com/images/TQgED9ot0QJaxvOWBoc9JZHJogg.jpg'},
+  {id:37, cat:'Dây Chuyền', name:'Chuyền Cầu',        price:'1.500.000',  imgA:'https://framerusercontent.com/images/qqTq52OzD2JAMKNJHOhfjfpJM0A.jpg',            imgB:'https://framerusercontent.com/images/clt3PrPa4R4JTr1Cnj3khKhYn0.jpg'},
+  {id:38, cat:'Dây Chuyền', name:'Chuyền Tăm',        price:'2.200.000',  imgA:'https://framerusercontent.com/images/GgYjdjexVy5ytvA4c7ZYAvSdeiY.png',            imgB:'https://framerusercontent.com/images/gNn74J8d5sLDuRTgwHJi7WWJU.jpg'},
+  {id:39, cat:'Nhẫn',       name:'Nhẫn Tăm',          price:'1.800.000',  imgA:'https://framerusercontent.com/images/GE3EKWl3WfCrKCbicdzulbiYQ.png',              imgB:'https://framerusercontent.com/images/RYmES6u40TXRNYrXBHQf7yCOF4.jpg'},
+  {id:40, cat:'Bông tai',   name:'Bông Tăm',          price:'950.000',    imgA:'https://cdn.phototourl.com/free/2026-04-22-838af2c2-996a-4623-a36b-578391792881.jpg', imgB:'https://cdn.phototourl.com/free/2026-04-22-050fcff1-8509-452c-bc92-794fb7094cc7.jpg'},
+];
+
+let cart = [];
+let cartOpen = false;
+let activeFilter = 'all';
+
+function imgTag(src, alt) {
+  if (!src) return `<div class="img-placeholder"><img src="Brand Asset/logo/SYMBOL_LOGO_BLACK0.png" alt=""></div>`;
+  return `<img src="${src}" alt="${alt}" loading="lazy">`;
+}
+
+function renderGrid() {
+  document.getElementById('prodGrid').innerHTML = products.map(p => {
+    const show = activeFilter === 'all' || p.cat === activeFilter;
+    const hasHover = p.imgB && p.imgB !== p.imgA;
+    return `
+      <div class="prod-card${show ? '' : ' hidden'}" onclick="location.href='product.html?id=${p.id}'">
+        <div class="prod-img">
+          <div class="img-default">${imgTag(p.imgA, p.name)}</div>
+          ${hasHover ? `<div class="img-hover"><img src="${p.imgB}" alt="${p.name}" loading="lazy"></div>` : ''}
+          <div class="prod-label">
+            <span class="prod-name">${p.name}</span>
+            <span class="prod-price">${p.price}&#8363;</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++; else cart.push({...p, qty: 1});
+  updateBadge();
+  showToast();
+}
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateBadge();
+  renderCartItems();
+}
+function updateBadge() {
+  const n = cart.reduce((s, x) => s + x.qty, 0);
+  const b = document.getElementById('cbadge');
+  b.style.display = n ? 'flex' : 'none';
+  b.textContent = n;
+  document.getElementById('cartFoot').style.display = cart.length ? 'block' : 'none';
+  const total = cart.reduce((s, x) => {
+    const v = parseInt(x.price.replace(/\./g, ''));
+    return s + v * x.qty;
+  }, 0);
+  document.getElementById('cartTotal').textContent = total.toLocaleString('vi-VN') + '₫';
+}
+function renderCartItems() {
+  const b = document.getElementById('cartBody');
+  if (!cart.length) { b.innerHTML = '<p class="cempty">Your cart is empty</p>'; return; }
+  b.innerHTML = cart.map(item => `
+    <div class="citem">
+      <div class="cthumb">${item.imgA ? `<img src="${item.imgA}" alt="${item.name}">` : ''}</div>
+      <div class="cinfo">
+        <div class="cname">${item.name}${item.qty > 1 ? ' x' + item.qty : ''}</div>
+        <div class="cprice">${item.price}₫</div>
+        <button class="crm" onclick="removeFromCart(${item.id})">remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleCart() {
+  cartOpen = !cartOpen;
+  document.getElementById('cartWrap').className = 'cart-overlay-wrap' + (cartOpen ? ' open' : '');
+  if (cartOpen) renderCartItems();
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+function observeCards() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0, rootMargin: '0px 0px -40px 0px'});
+  document.querySelectorAll('.prod-card:not(.hidden)').forEach(c => io.observe(c));
+}
+
+document.getElementById('filterBar').onclick = e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.cat;
+  renderGrid();
+  observeCards();
+};
+
+renderGrid();
+requestAnimationFrame(observeCards);
+</script>
+</body>
+</html>

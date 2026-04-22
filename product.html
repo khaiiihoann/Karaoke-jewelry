@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KARAOKE JEWELRY</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;width:100%;}
+a,a:visited,a:active{color:inherit;text-decoration:none;}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:46px;position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #111;transition:background .3s;}
+.nav-l,.nav-r{display:flex;gap:20px;align-items:center;}
+.nav-l a,.nav-r a,.nav-r button{font-size:11px;letter-spacing:.07em;color:#111;text-decoration:none;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-transform:uppercase;}
+.nav-sep{font-size:12px;color:#555;}
+.nav-logo{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-logo img{height:22px;display:block;}
+.cart-btn{position:relative;}
+.cbadge{position:absolute;top:-5px;right:-10px;background:#22E033;color:#111;font-size:9px;border-radius:50%;width:13px;height:13px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+
+.product-wrap{display:flex;padding-top:46px;min-height:100vh;}
+.gallery-side{flex:0 0 60%;position:sticky;top:46px;height:calc(100vh - 46px);border-right:1px solid #111;overflow:hidden;display:flex;flex-direction:column;}
+.gallery-main{flex:1;position:relative;overflow:hidden;background:#f9f9f9;}
+.gallery-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .4s ease;}
+.gallery-slide.active{opacity:1;}
+.gallery-slide img{width:100%;height:100%;object-fit:contain;}
+.gallery-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f5f5f5;}
+.gallery-placeholder img{width:80px;height:80px;opacity:.12;}
+.gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:#111;padding:12px;z-index:2;line-height:1;}
+.gallery-arrow.prev{left:10px;}
+.gallery-arrow.next{right:10px;}
+.gallery-arrow:hover{opacity:.45;}
+.gallery-dots{display:flex;justify-content:center;gap:7px;padding:14px 0;border-top:1px solid #e0e0e0;}
+.gallery-dot{width:5px;height:5px;border-radius:50%;background:#ccc;border:none;cursor:pointer;padding:0;transition:background .2s;}
+.gallery-dot.active{background:#111;}
+
+.info-side{flex:1;padding:28px 36px 60px;overflow-y:auto;}
+.info-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.product-name{font-size:18px;letter-spacing:.12em;font-weight:300;text-transform:uppercase;}
+.product-price{font-size:17px;letter-spacing:.04em;font-weight:400;}
+.tax-note{font-size:10px;color:#aaa;letter-spacing:.04em;margin-bottom:20px;}
+.product-desc{font-size:11px;line-height:1.75;color:#555;letter-spacing:.03em;margin-bottom:20px;border-top:1px solid #e0e0e0;padding-top:18px;}
+.product-detail{font-size:11px;line-height:2.1;color:#555;letter-spacing:.03em;margin-bottom:26px;}
+.product-detail li{list-style:none;}
+
+.selector-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#111;margin-bottom:10px;display:flex;gap:8px;align-items:baseline;}
+.size-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;}
+.size-btn{min-width:40px;height:40px;padding:0 10px;display:flex;align-items:center;justify-content:center;border:1px solid #e0e0e0;background:#fff;font-size:11px;letter-spacing:.04em;cursor:pointer;font-family:inherit;color:#111;transition:border-color .15s,background .15s;}
+.size-btn:hover{border-color:#111;}
+.size-btn.selected{border-color:#111;background:#111;color:#fff;}
+
+.material-grid{display:flex;gap:10px;margin-bottom:36px;}
+.material-btn{display:flex;align-items:center;gap:7px;border:1px solid #e0e0e0;background:#fff;padding:8px 12px;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:.04em;color:#111;transition:border-color .15s;}
+.material-btn:hover{border-color:#111;}
+.material-btn.selected{border-color:#111;}
+.material-swatch{width:18px;height:18px;border-radius:50%;border:1px solid #ddd;flex-shrink:0;}
+
+.add-btn{width:100%;padding:16px;background:#111;color:#fff;border:none;font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:background .2s;margin-bottom:16px;}
+.add-btn:hover{background:#333;}
+.ig-note{font-size:10px;color:#aaa;letter-spacing:.04em;text-align:center;line-height:1.6;}
+.ig-note a{color:#111;text-decoration:underline;}
+
+.related-section{border-top:1px solid #111;}
+.related-hdr{padding:14px 20px 6px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#111;}
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #111;border-left:1px solid #111;}
+.rel-card{border-right:1px solid #111;border-bottom:1px solid #111;cursor:pointer;background:#fff;position:relative;overflow:hidden;}
+.rel-img{aspect-ratio:1/1;position:relative;overflow:hidden;background:#f9f9f9;}
+.img-default,.img-hover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .35s ease;}
+.img-default img,.img-hover img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-default{opacity:1;}
+.img-hover{opacity:0;}
+.rel-card:hover .img-default{opacity:0;}
+.rel-card:hover .img-hover{opacity:1;}
+.rel-label{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-end;padding:10px 14px;transition:opacity .25s ease;pointer-events:none;}
+.rel-card:hover .rel-label{opacity:0;}
+.rel-name{font-size:12px;letter-spacing:.04em;color:#111;}
+.rel-price{font-size:12px;letter-spacing:.02em;color:#111;white-space:nowrap;}
+
+.footer{border-top:1px solid #111;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+.footer-links a,.footer-ig{font-size:15px;letter-spacing:.01em;color:#888;text-decoration:none;}
+.footer-links a:hover,.footer-ig:hover{color:#111;}
+
+.notif-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to bottom,#ffffff 40%,rgba(34,224,51,0.35) 100%);border-top:1px solid #111;z-index:200;overflow:hidden;white-space:nowrap;padding:10px 0;}
+.notif-inner{display:inline-block;animation:mq 80s linear infinite;}
+.notif-inner span{font-size:13px;letter-spacing:.05em;margin:0 32px;color:#111;}
+body{padding-bottom:42px;}
+
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:10px;letter-spacing:.1em;padding:7px 14px;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:300;}
+.toast.show{opacity:1;}
+
+.cart-overlay-wrap{position:fixed;inset:0;pointer-events:none;z-index:400;}
+.cart-overlay-wrap.open{pointer-events:auto;}
+.cart-scrim{display:none;position:absolute;inset:0;background:rgba(0,0,0,.28);}
+.cart-overlay-wrap.open .cart-scrim{display:block;}
+.cart-panel{position:absolute;top:0;right:0;width:320px;height:100%;background:#fff;border-left:1px solid #e0e0e0;display:none;overflow-y:auto;}
+.cart-overlay-wrap.open .cart-panel{display:flex;flex-direction:column;}
+.chdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e0e0e0;}
+.chdr span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;}
+.cclose{background:none;border:none;font-size:20px;cursor:pointer;color:#111;line-height:1;}
+.cbody{padding:18px;flex:1;}
+.cempty{font-size:11px;color:#aaa;letter-spacing:.05em;text-align:center;padding:28px 0;}
+.citem{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eee;}
+.cthumb{width:48px;height:48px;background:#f7f7f7;flex-shrink:0;overflow:hidden;}
+.cthumb img{width:100%;height:100%;object-fit:cover;}
+.cinfo{flex:1;}
+.cname{font-size:11px;letter-spacing:.04em;margin-bottom:3px;}
+.cprice{font-size:11px;color:#888;}
+.crm{background:none;border:none;font-size:10px;color:#bbb;cursor:pointer;text-decoration:underline;margin-top:3px;display:block;}
+.cfoot{padding:14px 18px;border-top:1px solid #e0e0e0;}
+.ctrow{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.04em;margin-bottom:10px;}
+.cship{font-size:10px;color:#aaa;margin-bottom:12px;}
+.cbtn{width:100%;padding:12px;background:#111;color:#fff;border:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+.cbtn:hover{background:#222;}
+
+.not-found{padding:120px 40px;text-align:center;font-size:12px;letter-spacing:.1em;color:#aaa;}
+
+@media(max-width:768px){
+  .nav-l{display:none;}
+  .nav-r a{display:none;}
+  .nav-r .cart-btn{display:flex;}
+  .nav-sep{display:none;}
+  .nav{justify-content:flex-end;}
+  .nav-logo img{height:17px;}
+  .product-wrap{flex-direction:column;}
+  .gallery-side{position:relative;top:0;height:80vw;flex:none;border-right:none;border-bottom:1px solid #111;}
+  .info-side{padding:20px 18px 50px;}
+  .related-grid{grid-template-columns:repeat(2,1fr);}
+  .footer{flex-direction:column;align-items:flex-start;gap:12px;}
+  .cart-panel{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-l">
+    <a href="shop.html">shop</a>
+    <a href="#">collections</a>
+    <a href="#">custom</a>
+  </div>
+  <div class="nav-logo">
+    <a href="KARA_WEBSITE_DRAFT.html">
+      <img src="Brand Asset/logo/LOGO_NGANG_BLACK.png" alt="KARAOKE JEWELRY">
+    </a>
+  </div>
+  <div class="nav-r">
+    <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
+    <a href="#">about</a>
+    <span class="nav-sep">|</span>
+    <button class="cart-btn" onclick="toggleCart()">
+      Cart
+      <span class="cbadge" id="cbadge" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
+<div id="pageContent"></div>
+
+<div class="cart-overlay-wrap" id="cartWrap">
+  <div class="cart-scrim" onclick="toggleCart()"></div>
+  <div class="cart-panel">
+    <div class="chdr"><span>Your cart</span><button class="cclose" onclick="toggleCart()">&#215;</button></div>
+    <div class="cbody" id="cartBody"><p class="cempty">Your cart is empty</p></div>
+    <div class="cfoot" id="cartFoot" style="display:none">
+      <div class="ctrow"><span>Estimated total</span><span id="cartTotal">&#8363;0</span></div>
+      <div class="cship">Tax included. Shipping calculated at checkout.</div>
+      <button class="cbtn">Check out</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">Added to cart</div>
+
+<div class="notif-bar">
+  <div class="notif-inner">
+    <span>Trang web này chỉ để xem giá, không hỗ trợ đặt hàng. Vui lòng liên hệ Instagram Cà Rá để mua hàng.</span>
+    <span>&mdash;</span>
+    <span>This website is for price viewing only. Please contact Cà Rá on Instagram to purchase.</span>
+    <span>&mdash;</span>
+    <span>Trang web này chỉ để xem giá, không hỗ trợ đặt hàng. Vui lòng liên hệ Instagram Cà Rá để mua hàng.</span>
+    <span>&mdash;</span>
+    <span>This website is for price viewing only. Please contact Cà Rá on Instagram to purchase.</span>
+    <span>&mdash;</span>
+  </div>
+</div>
+
+<script>
+// ─── PRODUCT DATA ────────────────────────────────────────────────────────────
+// sizes: [] = no size selector (one-size / charm)
+// Rings → ['S','M'] | Bracelets → ['S','M','L'] | others → []
+
+const products = [
+  {id:1,  cat:'Bông tai',   name:'Bông Móng Ngựa',  price:'675.000',   sizes:[],        imgA:'https://i.ibb.co/p6Lp0h2t/Untitled-Catalog1279.png',                                imgB:'https://i.ibb.co/rR4bKs1z/Untitled-Catalog1266.png'},
+  {id:2,  cat:'Dây Chuyền', name:'Chuyền Cá Ngựa',  price:'2.640.000', sizes:[],        imgA:'https://cdn2-retail-images.kiotviet.vn/2026/03/13/tskaraoke/e720f3fb29cb4d189f3ad219e0aa02f0.png', imgB:''},
+  {id:3,  cat:'Charm',      name:'Cá Ngựa Charm',   price:'3.500.000', sizes:[],        imgA:'https://i.ibb.co/xttGJSJz/Screenshot-2026-04-22-173503.png',                       imgB:'https://i.ibb.co/PnG321W/Untitled-Catalog1175.png'},
+  {id:4,  cat:'Nhẫn',       name:'Nhẫn Cà Rá',      price:'1.650.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/FmgnNcI1oJR5Bg5QCCoqSwbhwc.png',              imgB:''},
+  {id:5,  cat:'Bông tai',   name:'Bông Kim Uốn',    price:'1.500.000', sizes:[],        imgA:'https://framerusercontent.com/images/DMXDggiNTUkw0Pe1mZps5F5DGHs.png',             imgB:'https://framerusercontent.com/images/PsENHslvQMvNWbE18oZwMVZih8.png'},
+  {id:6,  cat:'Dây Chuyền', name:'Chuyền Gạch Ống', price:'3.060.000', sizes:[],        imgA:'https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png',             imgB:'https://framerusercontent.com/images/Bjxo6wcZEuGFHJYILOs1AMendkY.png'},
+  {id:7,  cat:'Dây Chuyền', name:'Chuyền Gạch',     price:'3.125.000', sizes:[],        imgA:'https://framerusercontent.com/images/OXOySkgKmAJvpKmwh8J24CyUJww.png',             imgB:''},
+  {id:8,  cat:'Charm',      name:'Charm Mặt Gạch',  price:'1.800.000', sizes:[],        imgA:'https://framerusercontent.com/images/OXOySkgKmAJvpKmwh8J24CyUJww.png',             imgB:''},
+  {id:9,  cat:'Charm',      name:'Charm Gạch Ống',  price:'2.500.000', sizes:[],        imgA:'https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png',             imgB:''},
+  {id:10, cat:'Nhẫn',       name:'Nhẫn Gạch Nhất',  price:'2.100.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/iZsJhSaKJXM9TZHFA8hLFUk4oRw.png',             imgB:'https://framerusercontent.com/images/mlhK7Ariz8L3ylzn0GmKoK697zc.png'},
+  {id:11, cat:'Nhẫn',       name:'Nhẫn Gạch Nam',   price:'2.800.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/25qyKQkXNfh7QZtXNM0cmEgxN04.png',             imgB:'https://framerusercontent.com/images/iWD7gGFl8OMV2SHTI5drNcQVEa8.png'},
+  {id:12, cat:'Bông tai',   name:'Bông Kim Cúc',    price:'1.500.000', sizes:[],        imgA:'https://framerusercontent.com/images/DMXDggiNTUkw0Pe1mZps5F5DGHs.png',             imgB:'https://framerusercontent.com/images/PsENHslvQMvNWbE18oZwMVZih8.png'},
+  {id:13, cat:'Dây Chuyền', name:'Chuyền Kim Uốn',  price:'1.900.000', sizes:[],        imgA:'https://i.ibb.co/NnSDPLqq/bong-kim-cuc-bg.png',                                    imgB:'https://i.ibb.co/TZQLg82/image.png'},
+  {id:14, cat:'Charm',      name:'Charm Kim Uốn',   price:'1.300.000', sizes:[],        imgA:'',                                                                                  imgB:''},
+  {id:15, cat:'Nhẫn',       name:'Nhẫn Kim Uốn',    price:'1.550.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png',             imgB:''},
+  {id:16, cat:'Charm',      name:'Charm Kim Cúc',   price:'1.300.000', sizes:[],        imgA:'',                                                                                  imgB:''},
+  {id:17, cat:'Nhẫn',       name:'Nhẫn Kim Cúc',    price:'1.320.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/st6vjpLEbAW6C7TQ4gWxw0RdXM.png',             imgB:'https://framerusercontent.com/images/E7z9NTEWhx1BE8u9npnBpqVJ3o.png'},
+  {id:18, cat:'Nhẫn',       name:'Nhẫn Kim Nữ',     price:'1.150.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/9OZ91GZ9OsHG2SZQPmdsueAT4Y.png',             imgB:'https://framerusercontent.com/images/llevzRIhG90jLtsQT6vBBj8Y.png'},
+  {id:19, cat:'Nhẫn',       name:'Nhẫn Kim Nam',    price:'1.800.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/4of5Wew2wsWsPr4mgv6iXCWDI.png',              imgB:'https://framerusercontent.com/images/QKOGsfbYZuZoh1GAqdzV0Q7MQ.png'},
+  {id:20, cat:'Bông tai',   name:'Bông Nhện',       price:'900.000',   sizes:[],        imgA:'https://framerusercontent.com/images/luPOvhY5pN6vuVDCSxdaHxrNJE.png',             imgB:'https://framerusercontent.com/images/fPWJo0n4bvJJcYn86iu80ZOK30.png'},
+  {id:21, cat:'Nhẫn',       name:'Nhẫn Trứng',      price:'2.100.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/0kLFzRyVfeqACuJSpXoyLHZf68.jpg',             imgB:'https://framerusercontent.com/images/em8WfMJgZUmRIVXrUKoe9sEdpk.png'},
+  {id:22, cat:'Nhẫn',       name:'Nhẫn Trăng',      price:'1.750.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/nd9yDZtv8s0Gcs468tkrkTww.jpg',               imgB:'https://framerusercontent.com/images/YO3Rmg4RjlPNoPYlrBpyfxxl6c.png'},
+  {id:23, cat:'Vòng Tay',   name:'Bay Lắc',         price:'3.700.000', sizes:['S','M','L'], imgA:'https://framerusercontent.com/images/5Wck3AUWdv2JXnAtOsrxp5SOI.jpg',          imgB:'https://framerusercontent.com/images/Ii8b1P4vWchaMxrvjGa9JTPA8.png'},
+  {id:24, cat:'Charm',      name:'Charm Cá',        price:'1.780.000', sizes:[],        imgA:'https://framerusercontent.com/images/uwnE6jG06ZQjE2uILuU3okyc.jpg',              imgB:'https://framerusercontent.com/images/6zQU5LNYMOj535KzxVuapw7PHk.png'},
+  {id:25, cat:'Charm',      name:'Charm Lon',       price:'1.700.000', sizes:[],        imgA:'https://framerusercontent.com/images/EP5XJ9jnFPo7BFum7ZAvtKM.jpg',               imgB:'https://framerusercontent.com/images/E9I7cgSOdUA1jDhSJlkkEQwE8.jpg'},
+  {id:26, cat:'Bông tai',   name:'Bông Lon',        price:'1.800.000', sizes:[],        imgA:'',                                                                                  imgB:''},
+  {id:27, cat:'Bông tai',   name:'Khoen Tròn',      price:'250.000',   sizes:[],        imgA:'',                                                                                  imgB:''},
+  {id:28, cat:'Dây Chuyền', name:'Dây Mì Nhỏ',      price:'625.000',   sizes:[],        imgA:'',                                                                                  imgB:''},
+  {id:29, cat:'Bông tai',   name:'Bông Ốc Len',     price:'950.000',   sizes:[],        imgA:'https://framerusercontent.com/images/vC46TZneo6eWBS5HMCbY6wCHk.png',              imgB:'https://framerusercontent.com/images/pON5GpBmkrvakoF96dgIgfHS5Y.jpg'},
+  {id:30, cat:'Charm',      name:'Mặt Ốc Len',      price:'850.000',   sizes:[],        imgA:'https://framerusercontent.com/images/vC46TZneo6eWBS5HMCbY6wCHk.png',              imgB:'https://framerusercontent.com/images/pON5GpBmkrvakoF96dgIgfHS5Y.jpg'},
+  {id:31, cat:'Dây Chuyền', name:'Chuyền Ốc Len',   price:'1.150.000', sizes:[],        imgA:'https://framerusercontent.com/images/v3OIGpzPhFrqyIQE0sW44q06EhE.png',            imgB:'https://framerusercontent.com/images/bd3X504afeqDPCpoIyHYzsPVL4.jpg'},
+  {id:32, cat:'Dây Chuyền', name:'Chuyền Ghẹ',      price:'1.700.000', sizes:[],        imgA:'https://framerusercontent.com/images/Yhw4Opm6BDOOgnKh3iwRNvAMBVY.png',            imgB:'https://framerusercontent.com/images/PdBcyQ6jgKTNYQMCC24ggtdHDKA.jpg'},
+  {id:33, cat:'Bông tai',   name:'Bông Ghẹ Nhỏ',    price:'450.000',   sizes:[],        imgA:'https://framerusercontent.com/images/8CZSFEHIjiIx9uC9rF4OpyJM2Ow.png',            imgB:''},
+  {id:34, cat:'Bông tai',   name:'Bông Ghẹ To',     price:'1.300.000', sizes:[],        imgA:'https://framerusercontent.com/images/J9G5sghacua6lFu2w1oD3hAqhw.png',             imgB:'https://framerusercontent.com/images/VR6DLCU8w9mQMM2Bxee49tKynHw.jpg'},
+  {id:35, cat:'Charm',      name:'Mặt Ghẹ',         price:'1.000.000', sizes:[],        imgA:'https://framerusercontent.com/images/J9G5sghacua6lFu2w1oD3hAqhw.png',             imgB:'https://framerusercontent.com/images/VR6DLCU8w9mQMM2Bxee49tKynHw.jpg'},
+  {id:36, cat:'Nhẫn',       name:'Nhẫn Ghẹ',        price:'1.400.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/3bSW34nCvbZxO3rDaoWCM2peA.png',              imgB:'https://framerusercontent.com/images/TQgED9ot0QJaxvOWBoc9JZHJogg.jpg'},
+  {id:37, cat:'Dây Chuyền', name:'Chuyền Cầu',      price:'1.500.000', sizes:[],        imgA:'https://framerusercontent.com/images/qqTq52OzD2JAMKNJHOhfjfpJM0A.jpg',            imgB:'https://framerusercontent.com/images/clt3PrPa4R4JTr1Cnj3khKhYn0.jpg'},
+  {id:38, cat:'Dây Chuyền', name:'Chuyền Tăm',      price:'2.200.000', sizes:[],        imgA:'https://framerusercontent.com/images/GgYjdjexVy5ytvA4c7ZYAvSdeiY.png',            imgB:'https://framerusercontent.com/images/gNn74J8d5sLDuRTgwHJi7WWJU.jpg'},
+  {id:39, cat:'Nhẫn',       name:'Nhẫn Tăm',        price:'1.800.000', sizes:['S','M'], imgA:'https://framerusercontent.com/images/GE3EKWl3WfCrKCbicdzulbiYQ.png',              imgB:'https://framerusercontent.com/images/RYmES6u40TXRNYrXBHQf7yCOF4.jpg'},
+  {id:40, cat:'Bông tai',   name:'Bông Tăm',        price:'950.000',   sizes:[],        imgA:'https://cdn.phototourl.com/free/2026-04-22-838af2c2-996a-4623-a36b-578391792881.jpg', imgB:'https://cdn.phototourl.com/free/2026-04-22-050fcff1-8509-452c-bc92-794fb7094cc7.jpg'},
+];
+
+const catDesc = {
+  'Nhẫn':       'Nhẫn bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  'Bông tai':   'Bông tai bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  'Dây Chuyền': 'Dây chuyền bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  'Vòng Tay':   'Vòng tay bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  'Charm':      'Charm bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+};
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+const id = parseInt(new URLSearchParams(location.search).get('id'));
+const product = products.find(p => p.id === id);
+
+if (!product) {
+  document.getElementById('pageContent').innerHTML =
+    '<div class="not-found">Product not found. <a href="shop.html" style="text-decoration:underline">Return to shop</a></div>';
+} else {
+  document.title = product.name + ' — KARAOKE JEWELRY';
+
+  const images = [product.imgA, product.imgB && product.imgB !== product.imgA ? product.imgB : null].filter(Boolean);
+  const related = products.filter(p => p.cat === product.cat && p.id !== product.id).slice(0, 4);
+
+  const gallerySlides = images.length
+    ? images.map((src, i) => `<div class="gallery-slide${i === 0 ? ' active' : ''}"><img src="${src}" alt="${product.name}"></div>`).join('')
+    : `<div class="gallery-slide active"><div class="gallery-placeholder"><img src="Brand Asset/logo/SYMBOL_LOGO_BLACK0.png" alt=""></div></div>`;
+
+  const galleryDots = images.length > 1
+    ? `<div class="gallery-dots">${images.map((_, i) => `<button class="gallery-dot${i === 0 ? ' active' : ''}" onclick="goSlide(${i})"></button>`).join('')}</div>`
+    : '';
+
+  const arrows = images.length > 1
+    ? `<button class="gallery-arrow prev" onclick="slide(-1)">&#8592;</button><button class="gallery-arrow next" onclick="slide(1)">&#8594;</button>`
+    : '';
+
+  const sizeHTML = product.sizes.length
+    ? `<div class="selector-label">size</div>
+       <div class="size-grid">${product.sizes.map((s, i) =>
+         `<button class="size-btn${i === 0 ? ' selected' : ''}" onclick="selectSize(this)">${s}</button>`
+       ).join('')}</div>`
+    : '';
+
+  const relatedHTML = related.length
+    ? `<div class="related-section">
+        <div class="related-hdr">You may also like</div>
+        <div class="related-grid">
+          ${related.map(r => `
+            <div class="rel-card" onclick="location.href='product.html?id=${r.id}'">
+              <div class="rel-img">
+                <div class="img-default">${r.imgA ? `<img src="${r.imgA}" alt="${r.name}" loading="lazy">` : ''}</div>
+                ${r.imgB && r.imgB !== r.imgA ? `<div class="img-hover"><img src="${r.imgB}" alt="${r.name}" loading="lazy"></div>` : ''}
+                <div class="rel-label">
+                  <span class="rel-name">${r.name}</span>
+                  <span class="rel-price">${r.price}&#8363;</span>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`
+    : '';
+
+  document.getElementById('pageContent').innerHTML = `
+    <div class="product-wrap">
+      <div class="gallery-side">
+        <div class="gallery-main" id="galleryMain">
+          ${gallerySlides}
+          ${arrows}
+        </div>
+        ${galleryDots}
+      </div>
+      <div class="info-side">
+        <div class="info-top">
+          <span class="product-name">${product.name}</span>
+          <span class="product-price">${product.price}&#8363;</span>
+        </div>
+        <div class="tax-note">Tax included. Shipping calculated at checkout.</div>
+        <p class="product-desc">${catDesc[product.cat] || ''}</p>
+        <ul class="product-detail">
+          <li>925 sterling silver</li>
+          <li>thiết kế độc quyền KARAOKE</li>
+          <li>made to order</li>
+        </ul>
+        ${sizeHTML}
+        <div class="selector-label">material</div>
+        <div class="material-grid">
+          <button class="material-btn selected">
+            <span class="material-swatch" style="background:#d4d4d4;"></span>
+            925 sterling silver
+          </button>
+        </div>
+        <button class="add-btn" onclick="addToCartProduct()">add to cart</button>
+        <p class="ig-note">Để đặt hàng, liên hệ qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a></p>
+      </div>
+    </div>
+    ${relatedHTML}
+    <div class="footer">
+      <div class="footer-links">
+        <a href="#">refund policy</a>
+        <a href="#">privacy policy</a>
+        <a href="#">terms of service</a>
+        <a href="#">shipping policy</a>
+        <a href="#">legal notice</a>
+        <a href="#">contact information</a>
+      </div>
+      <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
+    </div>
+  `;
+}
+
+// ─── GALLERY ─────────────────────────────────────────────────────────────────
+let currentSlide = 0;
+function goSlide(n) {
+  const slides = document.querySelectorAll('.gallery-slide');
+  const dots   = document.querySelectorAll('.gallery-dot');
+  if (!slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide]?.classList.remove('active');
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide]?.classList.add('active');
+}
+function slide(dir) { goSlide(currentSlide + dir); }
+
+// ─── SELECTORS ───────────────────────────────────────────────────────────────
+function selectSize(btn) {
+  btn.closest('.size-grid').querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+// ─── CART ────────────────────────────────────────────────────────────────────
+let cart = [];
+let cartOpen = false;
+
+function addToCartProduct() {
+  if (!product) return;
+  const sizeBtn = document.querySelector('.size-btn.selected');
+  const size = sizeBtn ? sizeBtn.textContent : null;
+  const key = `${product.id}-${size || 'one-size'}`;
+  const label = size ? `${product.name} (${size})` : product.name;
+  const ex = cart.find(x => x.key === key);
+  if (ex) ex.qty++;
+  else cart.push({ key, name: label, price: product.price, img: product.imgA, qty: 1 });
+  updateBadge();
+  showToast();
+}
+function removeFromCart(key) {
+  cart = cart.filter(x => x.key !== key);
+  updateBadge();
+  renderCartItems();
+}
+function updateBadge() {
+  const n = cart.reduce((s, x) => s + x.qty, 0);
+  const b = document.getElementById('cbadge');
+  b.style.display = n ? 'flex' : 'none';
+  b.textContent = n;
+  document.getElementById('cartFoot').style.display = cart.length ? 'block' : 'none';
+  const total = cart.reduce((s, x) => s + parseInt(x.price.replace(/\./g, '')) * x.qty, 0);
+  document.getElementById('cartTotal').textContent = total.toLocaleString('vi-VN') + '₫';
+}
+function renderCartItems() {
+  const b = document.getElementById('cartBody');
+  if (!cart.length) { b.innerHTML = '<p class="cempty">Your cart is empty</p>'; return; }
+  b.innerHTML = cart.map(item => `
+    <div class="citem">
+      <div class="cthumb">${item.img ? `<img src="${item.img}" alt="${item.name}">` : ''}</div>
+      <div class="cinfo">
+        <div class="cname">${item.name}${item.qty > 1 ? ' x' + item.qty : ''}</div>
+        <div class="cprice">${item.price}₫</div>
+        <button class="crm" onclick="removeFromCart('${item.key}')">remove</button>
+      </div>
+    </div>`).join('');
+}
+function toggleCart() {
+  cartOpen = !cartOpen;
+  document.getElementById('cartWrap').className = 'cart-overlay-wrap' + (cartOpen ? ' open' : '');
+  if (cartOpen) renderCartItems();
+}
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1600);
+}
+</script>
+</body>
+</html>
