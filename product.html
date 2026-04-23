@@ -349,8 +349,7 @@ function setupZoom() {
     const py = (e.clientY - ry0) / rh;
     if (px < 0 || px > 1 || py < 0 || py > 1) { popup.style.display = 'none'; return; }
 
-    // Use high-res src (replace w param or use naturalWidth)
-    zimg.src = img.src.replace(/[?&]w=\d+/, '').replace(/[?&]q=\d+/, '') + '?auto=format&q=95';
+    zimg.src = img.src;
 
     const sw = rw * ZOOM, sh = rh * ZOOM;
     const ox = Math.min(0, Math.max(POPUP - sw, -(px * sw - POPUP / 2)));
