@@ -8,15 +8,19 @@ async function sanityFetch(query) {
   return data.result;
 }
 
-function sanityImageUrl(imageField) {
+function sanityImageUrl(imageField, {w, h, fit} = {}) {
   if (!imageField?.asset?._ref) return '';
   const ref = imageField.asset._ref;
-  // format: "image-{id}-{dimensions}-{format}"
   const parts = ref.split('-');
   const format = parts.pop();
   const dimensions = parts.pop();
   const id = parts.slice(1).join('-');
-  return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dimensions}.${format}`; // image CDN stays the same
+  const base = `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dimensions}.${format}`;
+  const params = new URLSearchParams({auto: 'format', q: '85'});
+  if (w) params.set('w', w);
+  if (h) params.set('h', h);
+  if (fit) params.set('fit', fit);
+  return `${base}?${params}`;
 }
 
 function normalizeProduct(p) {
@@ -26,9 +30,10 @@ function normalizeProduct(p) {
     cat: p.category,
     price: p.price.toLocaleString('vi-VN'),
     sizes: p.sizes || [],
-    imgA: p.imageA ? sanityImageUrl(p.imageA) : (p.imgA || ''),
-    imgB: p.imageB ? sanityImageUrl(p.imageB) : (p.imgB || ''),
+    imgA: p.imageA ? sanityImageUrl(p.imageA, {w: '800'}) : (p.imgA || ''),
+    imgB: p.imageB ? sanityImageUrl(p.imageB, {w: '800'}) : (p.imgB || ''),
     description: p.description || '',
+    gallery: (p.gallery || []).map(img => sanityImageUrl(img, {w: '1200'})).filter(Boolean),
   };
 }
 

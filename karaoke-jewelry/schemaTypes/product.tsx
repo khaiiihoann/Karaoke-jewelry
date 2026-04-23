@@ -74,6 +74,14 @@ export default defineType({
       options: {hotspot: true},
     }),
     defineField({
+      name: 'gallery',
+      title: 'Bộ ảnh sản phẩm',
+      description: 'Nhiều ảnh cho slider trang chi tiết. Để trống → dùng hình chính + hình hover',
+      type: 'array',
+      group: 'images',
+      of: [{type: 'image', options: {hotspot: true}}],
+    }),
+    defineField({
       name: 'imgA',
       title: 'URL hình chính (cũ)',
       description: 'Dùng nếu chưa upload hình — sẽ được thay bằng hình upload',

@@ -203,7 +203,7 @@ init();
 async function init() {
   const urlId = new URLSearchParams(location.search).get('id');
   const [raw, settings] = await Promise.all([
-    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,price,category,sizes,imgA,imgB,imageA,imageB,description}`),
+    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,price,category,sizes,imgA,imgB,imageA,imageB,description,gallery[]}`),
     sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight,footerLinks}')
   ]);
 
@@ -223,7 +223,9 @@ async function init() {
   );
   const relatedNorm = (related || []).map(normalizeProduct);
 
-  const images = [product.imgA, product.imgB && product.imgB !== product.imgA ? product.imgB : null].filter(Boolean);
+  const images = product.gallery?.length
+    ? product.gallery
+    : [product.imgA, product.imgB && product.imgB !== product.imgA ? product.imgB : null].filter(Boolean);
 
   const gallerySlides = images.length
     ? images.map((src, i) => `<div class="gallery-slide${i === 0 ? ' active' : ''}"><img src="${src}" alt="${product.name}"></div>`).join('')
