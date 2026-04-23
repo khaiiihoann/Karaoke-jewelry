@@ -21,7 +21,7 @@ function sanityImageUrl(imageField) {
 
 function normalizeProduct(p) {
   return {
-    id: p.productId,
+    id: p._id,
     name: p.name,
     cat: p.category,
     price: p.price.toLocaleString('vi-VN'),

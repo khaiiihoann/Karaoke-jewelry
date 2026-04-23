@@ -288,7 +288,7 @@ init();
 async function init() {
   document.getElementById('prodGrid').innerHTML = '<div style="padding:80px;text-align:center;font-size:11px;letter-spacing:.1em;color:#aaa;">Loading...</div>';
   const [raw, settings] = await Promise.all([
-    sanityFetch('*[_type=="product"&&isVisible!=false]|order(sortOrder asc){productId,name,price,category,sizes,imgA,imgB,imageA,imageB}'),
+    sanityFetch('*[_type=="product"&&isVisible!=false]|order(sortOrder asc){_id,name,price,category,sizes,imgA,imgB,imageA,imageB}'),
     sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight,footerLinks}')
   ]);
   products = (raw || []).map(normalizeProduct);

@@ -131,11 +131,10 @@ export default defineType({
     }),
     defineField({
       name: 'productId',
-      title: 'Product ID',
-      description: 'Số nguyên unique — dùng cho URL ?id=X. Sản phẩm hiện tại: 1–40, sản phẩm mới dùng 41, 42, 43…',
+      title: 'Số catalog (tuỳ chọn)',
+      description: 'Số tham chiếu nội bộ — không dùng cho URL nữa, để trống cũng được',
       type: 'number',
       group: 'details',
-      validation: Rule => Rule.required().integer().min(1),
     }),
   ],
 
@@ -155,14 +154,16 @@ export default defineType({
   preview: {
     select: {
       title:    'name',
-      subtitle: 'category',
+      category: 'category',
+      price:    'price',
       media:    'imageA',
       imgUrl:   'imgA',
     },
-    prepare({title, subtitle, media, imgUrl}) {
+    prepare({title, category, price, media, imgUrl}) {
+      const priceStr = price ? price.toLocaleString('vi-VN') + '₫' : '';
       return {
         title:    title || 'Chưa đặt tên',
-        subtitle: subtitle || '',
+        subtitle: [category, priceStr].filter(Boolean).join(' · '),
         media:    media || (imgUrl
           ? React.createElement('img', {src: imgUrl, style: {width: '100%', height: '100%', objectFit: 'cover'}})
           : undefined),

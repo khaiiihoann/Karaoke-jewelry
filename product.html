@@ -201,9 +201,9 @@ let product = null;
 
 init();
 async function init() {
-  const urlId = parseInt(new URLSearchParams(location.search).get('id'));
+  const urlId = new URLSearchParams(location.search).get('id');
   const [raw, settings] = await Promise.all([
-    sanityFetch(`*[_type=="product"&&productId==${urlId}&&isVisible!=false][0]{productId,name,price,category,sizes,imgA,imgB,imageA,imageB,description}`),
+    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,price,category,sizes,imgA,imgB,imageA,imageB,description}`),
     sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight,footerLinks}')
   ]);
 
@@ -219,7 +219,7 @@ async function init() {
   document.title = product.name + ' — KARAOKE JEWELRY';
 
   const related = await sanityFetch(
-    `*[_type=="product"&&category=="${raw.category}"&&productId!=${urlId}&&isVisible!=false]|order(sortOrder asc)[0..3]{productId,name,price,imgA,imgB,imageA,imageB}`
+    `*[_type=="product"&&category=="${raw.category}"&&_id!="${urlId}"&&isVisible!=false]|order(sortOrder asc)[0..3]{_id,name,price,imgA,imgB,imageA,imageB}`
   );
   const relatedNorm = (related || []).map(normalizeProduct);
 
