@@ -328,10 +328,15 @@ function setupZoom() {
   document.body.appendChild(popup);
 
   gallerySide.addEventListener('mousemove', e => {
-    const img = e.target.closest('.gallery-slide img');
+    const img = document.querySelector('.gallery-slide.active img');
     if (!img || !img.naturalWidth) { popup.style.display = 'none'; return; }
+    // Only zoom when cursor is actually over the image element
+    const ir = img.getBoundingClientRect();
+    if (e.clientX < ir.left || e.clientX > ir.right || e.clientY < ir.top || e.clientY > ir.bottom) {
+      popup.style.display = 'none'; return;
+    }
 
-    const rect = img.getBoundingClientRect();
+    const rect = ir;
 
     // Compute actual rendered area (object-fit:contain letterboxing)
     const natAR = img.naturalWidth / img.naturalHeight;
