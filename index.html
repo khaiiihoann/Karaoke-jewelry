@@ -167,40 +167,16 @@ body{padding-bottom:42px;}
 
 </div>
 
+<script src="sanity.js"></script>
 <script>
-const products=[
-  {id:1,name:"Nhẫn ghẹ",price:"1.400.000&#8363;",
-   imgA:"https://framerusercontent.com/images/3bSW34nCvbZxO3rDaoWCM2peA.png",
-   imgB:"https://framerusercontent.com/images/TQgED9ot0QJaxvOWBoc9JZHJogg.jpg"},
-  {id:2,name:"Nhẫn tăm",price:"1.800.000&#8363;",
-   imgA:"https://framerusercontent.com/images/GE3EKWl3WfCrKCbicdzulbiYQ.png",
-   imgB:"https://framerusercontent.com/images/RYmES6u40TXRNYrXBHQf7yCOF4.jpg"},
-  {id:3,name:"Nhẫn gạch nhất",price:"2.100.000&#8363;",
-   imgA:"https://framerusercontent.com/images/iZsJhSaKJXM9TZHFA8hLFUk4oRw.png",
-   imgB:"https://framerusercontent.com/images/mlhK7Ariz8L3ylzn0GmKoK697zc.png"},
-  {id:4,name:"Cá Ngựa Charm",price:"3.500.000&#8363;",
-   imgA:"https://i.ibb.co/xttGJSJz/Screenshot-2026-04-22-173503.png",
-   imgB:"https://i.ibb.co/PnG321W/Untitled-Catalog1175.png"},
-  {id:5,name:"Chuyền KIM uốn",price:"1.900.000&#8363;",
-   imgA:"https://i.ibb.co/NnSDPLqq/bong-kim-cuc-bg.png",
-   imgB:"https://i.ibb.co/TZQLg82/image.png"},
-  {id:6,name:"Nhẫn kim uốn",price:"1.550.000&#8363;",
-   imgA:"https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png",
-   imgB:"https://framerusercontent.com/images/0IV5Slovo4NM2aaduep6WsMF6z4.png"},
-  {id:7,name:"Bông tăm",price:"950.000&#8363;",
-   imgA:"https://cdn.phototourl.com/free/2026-04-22-838af2c2-996a-4623-a36b-578391792881.jpg",
-   imgB:"https://cdn.phototourl.com/free/2026-04-22-050fcff1-8509-452c-bc92-794fb7094cc7.jpg"},
-  {id:8,name:"Chuyền gạch ống",price:"3.060.000&#8363;",
-   imgA:"https://framerusercontent.com/images/iNjzNy72oYy9EChaXD9jwrXPvAM.png",
-   imgB:"https://framerusercontent.com/images/Bjxo6wcZEuGFHJYILOs1AMendkY.png"},
-];
+let products=[];
 
 let cart=[];
 let cartOpen=false;
 
 function renderGrid(){
   document.getElementById('prodGrid').innerHTML=products.map(p=>`
-    <div class="prod-card" onclick="addToCart(${p.id})">
+    <div class="prod-card" onclick="location.href='product.html?id=${p.id}'">
       <div class="prod-img">
         <div class="img-default"><img src="${p.imgA}" alt="${p.name}"></div>
         <div class="img-hover"><img src="${p.imgB}" alt="${p.name}"></div>
@@ -257,15 +233,25 @@ function showToast(){
   setTimeout(()=>t.classList.remove('show'),1600);
 }
 
-renderGrid();
-
 const navEl=document.querySelector('.nav');
 function updateNav(){
   const heroH=document.querySelector('.hero').offsetHeight;
   navEl.classList.toggle('scrolled',window.scrollY>=heroH-10);
 }
 window.addEventListener('scroll',updateNav,{passive:true});
-updateNav();
+
+init();
+async function init(){
+  document.getElementById('prodGrid').innerHTML='<div style="padding:60px;text-align:center;font-size:11px;letter-spacing:.1em;color:#aaa;">Loading...</div>';
+  const [raw,settings]=await Promise.all([
+    sanityFetch('*[_type=="settings"][0]{featuredProducts[]->{productId,name,price,imgA,imgB,imageA,imageB}}').then(r => r?.featuredProducts || []),
+    sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight}')
+  ]);
+  products=(raw||[]).map(normalizeProduct);
+  applySettings(settings);
+  renderGrid();
+  updateNav();
+}
 </script>
 
 <div class="notif-bar">

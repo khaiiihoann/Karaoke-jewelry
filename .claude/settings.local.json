@@ -11,7 +11,12 @@
       "Bash(git init *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" repo create Karaoke-jewelry --public --source \"D:\\\\Work\\\\2024\\\\kara\\\\Claude_KARA_WEBSITE\" --remote origin --push 2>&1)",
+      "Bash(git remote *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "mcp__Sanity__create_documents_from_json"
     ]
   }
 }
