@@ -55,6 +55,9 @@ a,a:visited,a:active{color:inherit;text-decoration:none;}
 .footer-links a,.footer-ig{font-size:15px;letter-spacing:.01em;color:#888;text-decoration:none;}
 .footer-links a:hover,.footer-ig:hover{color:#111;}
 
+.zoom-popup{position:fixed;width:340px;height:340px;border:1px solid #111;background:#fff;z-index:150;pointer-events:none;display:none;overflow:hidden;}
+.zoom-popup img{width:100%;height:100%;object-fit:contain;display:block;}
+@media(hover:none){.zoom-popup{display:none!important;}}
 .cart-overlay-wrap{position:relative;min-height:0;}
 .cart-overlay-wrap.open{min-height:420px;}
 .cart-scrim{display:none;position:absolute;inset:0;background:rgba(0,0,0,.28);z-index:10;}
@@ -239,6 +242,38 @@ function updateNav(){
   navEl.classList.toggle('scrolled',window.scrollY>=heroH-10);
 }
 window.addEventListener('scroll',updateNav,{passive:true});
+
+(function(){
+  const popup = document.createElement('div');
+  popup.className = 'zoom-popup';
+  const zimg = document.createElement('img');
+  popup.appendChild(zimg);
+  document.body.appendChild(popup);
+  let activeCard = null;
+  document.addEventListener('mouseover', e => {
+    const card = e.target.closest('.prod-card');
+    if (!card) { popup.style.display = 'none'; activeCard = null; return; }
+    if (card === activeCard) return;
+    activeCard = card;
+    const src = card.querySelector('.img-default img')?.src;
+    if (!src) { popup.style.display = 'none'; return; }
+    zimg.src = src;
+    popup.style.display = 'block';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!activeCard) return;
+    const x = e.clientX + 24;
+    const y = e.clientY - 170;
+    popup.style.left = Math.min(x, window.innerWidth - 360) + 'px';
+    popup.style.top = Math.max(8, Math.min(y, window.innerHeight - 360)) + 'px';
+  });
+  document.addEventListener('mouseout', e => {
+    if (!e.relatedTarget || !e.relatedTarget.closest?.('.prod-card')) {
+      const leaving = e.target.closest?.('.prod-card');
+      if (leaving) { popup.style.display = 'none'; activeCard = null; }
+    }
+  });
+})();
 
 init();
 async function init(){
