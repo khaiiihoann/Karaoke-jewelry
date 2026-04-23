@@ -319,33 +319,50 @@ function setupZoom() {
   const gallerySide = document.querySelector('.gallery-side');
   if (!gallerySide) return;
 
-  const POPUP = 360, ZOOM = 2.5;
+  const POPUP = 380, ZOOM = 3;
   const popup = document.createElement('div');
   popup.style.cssText = `position:fixed;width:${POPUP}px;height:${POPUP}px;border:1px solid #111;background:#fff;overflow:hidden;display:none;pointer-events:none;z-index:100;`;
   const zimg = document.createElement('img');
-  zimg.style.cssText = 'position:absolute;max-width:none;';
+  zimg.style.cssText = 'position:absolute;max-width:none;image-rendering:auto;';
   popup.appendChild(zimg);
   document.body.appendChild(popup);
 
   gallerySide.addEventListener('mousemove', e => {
-    const slide = document.querySelector('.gallery-slide.active');
-    const img = slide?.querySelector('img');
-    if (!img) return;
-    const rect = img.getBoundingClientRect();
-    const rx = (e.clientX - rect.left) / rect.width;
-    const ry = (e.clientY - rect.top) / rect.height;
-    if (rx < 0 || rx > 1 || ry < 0 || ry > 1) { popup.style.display = 'none'; return; }
+    const img = e.target.closest('.gallery-slide img');
+    if (!img || !img.naturalWidth) { popup.style.display = 'none'; return; }
 
-    zimg.src = img.src;
-    const sw = rect.width * ZOOM;
-    const sh = rect.height * ZOOM;
-    const ox = Math.min(0, Math.max(POPUP - sw, -(rx * sw - POPUP / 2)));
-    const oy = Math.min(0, Math.max(POPUP - sh, -(ry * sh - POPUP / 2)));
-    zimg.style.cssText = `position:absolute;width:${sw}px;height:${sh}px;left:${ox}px;top:${oy}px;max-width:none;`;
+    const rect = img.getBoundingClientRect();
+
+    // Compute actual rendered area (object-fit:contain letterboxing)
+    const natAR = img.naturalWidth / img.naturalHeight;
+    const boxAR = rect.width / rect.height;
+    let rw, rh, rx0, ry0;
+    if (natAR > boxAR) {
+      rw = rect.width; rh = rect.width / natAR;
+      rx0 = rect.left; ry0 = rect.top + (rect.height - rh) / 2;
+    } else {
+      rh = rect.height; rw = rect.height * natAR;
+      ry0 = rect.top; rx0 = rect.left + (rect.width - rw) / 2;
+    }
+
+    const px = (e.clientX - rx0) / rw;
+    const py = (e.clientY - ry0) / rh;
+    if (px < 0 || px > 1 || py < 0 || py > 1) { popup.style.display = 'none'; return; }
+
+    // Use high-res src (replace w param or use naturalWidth)
+    zimg.src = img.src.replace(/[?&]w=\d+/, '').replace(/[?&]q=\d+/, '') + '?auto=format&q=95';
+
+    const sw = rw * ZOOM, sh = rh * ZOOM;
+    const ox = Math.min(0, Math.max(POPUP - sw, -(px * sw - POPUP / 2)));
+    const oy = Math.min(0, Math.max(POPUP - sh, -(py * sh - POPUP / 2)));
+    zimg.style.left = ox + 'px';
+    zimg.style.top  = oy + 'px';
+    zimg.style.width  = sw + 'px';
+    zimg.style.height = sh + 'px';
 
     popup.style.display = 'block';
-    popup.style.left = Math.min(e.clientX + 20, window.innerWidth - POPUP - 10) + 'px';
-    popup.style.top = Math.max(10, Math.min(e.clientY - POPUP / 2, window.innerHeight - POPUP - 10)) + 'px';
+    popup.style.left = Math.min(e.clientX + 20, window.innerWidth  - POPUP - 10) + 'px';
+    popup.style.top  = Math.max(10, Math.min(e.clientY - POPUP / 2, window.innerHeight - POPUP - 10)) + 'px';
   });
 
   gallerySide.addEventListener('mouseleave', () => { popup.style.display = 'none'; });
