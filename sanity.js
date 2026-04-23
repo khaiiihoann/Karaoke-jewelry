@@ -59,7 +59,7 @@ function applySettings(settings) {
     }
   }
 
-  // Nav right (skip cart button — keep it hardcoded)
+  // Nav right (skip cart button)
   if (settings.navRight?.length) {
     const navR = document.querySelector('.nav-r');
     if (navR) {
@@ -68,6 +68,24 @@ function applySettings(settings) {
         `<a href="${item.href || '#'}"${item.external ? ' target="_blank"' : ''}>${item.label}</a>`
       ).join('') + (cartBtn ? '<span class="nav-sep">|</span>' : '');
       if (cartBtn) navR.appendChild(cartBtn);
+    }
+  }
+
+  // Footer links
+  if (settings.footerLinks?.length) {
+    document.querySelectorAll('.footer-links').forEach(el => {
+      el.innerHTML = settings.footerLinks.map(item =>
+        `<a href="${item.href || '#'}">${item.label}</a>`
+      ).join('');
+    });
+  }
+
+  // Hero image (index.html only)
+  if (settings.heroImage || settings.heroImageUrl) {
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      const url = settings.heroImage ? sanityImageUrl(settings.heroImage) : settings.heroImageUrl;
+      if (url) hero.style.backgroundImage = `url('${url}')`;
     }
   }
 }

@@ -17,16 +17,6 @@ export default defineConfig({
           .title('KARAOKE JEWELRY')
           .items([
             S.listItem()
-              .title('🏠 Trang chủ — Featured Products')
-              .id('homepage')
-              .child(
-                S.documentTypeList('product')
-                  .title('Sản phẩm nổi bật (homepage)')
-                  .filter('_type == "product" && isFeatured == true')
-                  .defaultOrdering([{field: 'sortOrder', direction: 'asc'}])
-              ),
-            S.divider(),
-            S.listItem()
               .title('🛍 Tất cả sản phẩm')
               .schemaType('product')
               .child(

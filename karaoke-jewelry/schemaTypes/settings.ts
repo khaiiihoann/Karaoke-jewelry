@@ -5,22 +5,45 @@ export default defineType({
   title: 'Cài đặt website',
   type: 'document',
 
+  preview: {
+    prepare() {
+      return {title: 'Cài đặt website', subtitle: 'Navbar, thông báo, homepage'}
+    },
+  },
+
   groups: [
-    {name: 'nav',   title: 'Homepage & Navbar', default: true},
-    {name: 'notif', title: 'Thông báo'},
-    {name: 'social',title: 'Mạng xã hội'},
+    {name: 'homepage', title: 'Trang chủ', default: true},
+    {name: 'nav',      title: 'Navbar'},
+    {name: 'footer',   title: 'Footer'},
+    {name: 'notif',    title: 'Thông báo'},
+    {name: 'social',   title: 'Mạng xã hội'},
   ],
 
   fields: [
     // ── Homepage ─────────────────────────────────────────────────────────────
     defineField({
       name: 'featuredProducts',
-      title: 'Sản phẩm nổi bật (Homepage)',
+      title: 'Sản phẩm nổi bật',
       description: 'Chọn và sắp xếp thứ tự sản phẩm hiện trên trang chủ (tối đa 8)',
       type: 'array',
-      group: 'nav',
+      group: 'homepage',
       of: [{type: 'reference', to: [{type: 'product'}]}],
       validation: Rule => Rule.max(8),
+    }),
+    defineField({
+      name: 'heroImage',
+      title: 'Hero Image',
+      description: 'Ảnh nền lớn trên trang chủ',
+      type: 'image',
+      group: 'homepage',
+      options: {hotspot: true},
+    }),
+    defineField({
+      name: 'heroImageUrl',
+      title: 'Hero Image URL (fallback)',
+      description: 'Dùng nếu chưa upload hero image',
+      type: 'url',
+      group: 'homepage',
     }),
 
     // ── Navbar ───────────────────────────────────────────────────────────────
@@ -30,18 +53,14 @@ export default defineType({
       description: 'Các link bên trái navbar (shop, collections, custom…)',
       type: 'array',
       group: 'nav',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({name: 'label', title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
-            defineField({name: 'href',  title: 'Đường dẫn',    type: 'string', description: 'Ví dụ: shop.html hoặc /collections'}),
-          ],
-          preview: {
-            select: {title: 'label', subtitle: 'href'},
-          },
-        },
-      ],
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({name: 'label', title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
+          defineField({name: 'href',  title: 'Đường dẫn',    type: 'string'}),
+        ],
+        preview: {select: {title: 'label', subtitle: 'href'}},
+      }],
     }),
     defineField({
       name: 'navRight',
@@ -49,19 +68,32 @@ export default defineType({
       description: 'Các link bên phải navbar (instagram, about…)',
       type: 'array',
       group: 'nav',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({name: 'label',     title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
-            defineField({name: 'href',      title: 'Đường dẫn',    type: 'string'}),
-            defineField({name: 'external',  title: 'Mở tab mới',   type: 'boolean', initialValue: false}),
-          ],
-          preview: {
-            select: {title: 'label', subtitle: 'href'},
-          },
-        },
-      ],
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({name: 'label',    title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
+          defineField({name: 'href',     title: 'Đường dẫn',    type: 'string'}),
+          defineField({name: 'external', title: 'Mở tab mới',   type: 'boolean', initialValue: false}),
+        ],
+        preview: {select: {title: 'label', subtitle: 'href'}},
+      }],
+    }),
+
+    // ── Footer ───────────────────────────────────────────────────────────────
+    defineField({
+      name: 'footerLinks',
+      title: 'Links footer',
+      description: 'Các link hiển thị ở cuối trang',
+      type: 'array',
+      group: 'footer',
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({name: 'label', title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
+          defineField({name: 'href',  title: 'Đường dẫn',    type: 'string'}),
+        ],
+        preview: {select: {title: 'label', subtitle: 'href'}},
+      }],
     }),
 
     // ── Notification bar ─────────────────────────────────────────────────────
