@@ -118,7 +118,7 @@ function _applyNavLeft(items) {
     const isActive = item.href && item.href.includes(current);
     return `<a href="${item.href || '#'}"${isActive ? ' class="active"' : ''}>${label}</a>`;
   }).join('');
-  navL.innerHTML = linksHtml;
+  navL.innerHTML = '<button class="hamburger" onclick="toggleMobileMenu()">☰</button>' + linksHtml;
   const menu = document.querySelector('.mobile-menu');
   if (menu) menu.innerHTML = linksHtml;
 }
