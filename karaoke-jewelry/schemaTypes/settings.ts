@@ -57,8 +57,9 @@ export default defineType({
       of: [{
         type: 'object',
         fields: [
-          defineField({name: 'label', title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
-          defineField({name: 'href',  title: 'Đường dẫn',    type: 'string'}),
+          defineField({name: 'label',    title: 'Tên (Tiếng Việt)', type: 'string', validation: R => R.required()}),
+          defineField({name: 'label_en', title: 'Tên (English)',     type: 'string'}),
+          defineField({name: 'href',     title: 'Đường dẫn',         type: 'string'}),
         ],
         preview: {select: {title: 'label', subtitle: 'href'}},
       }],
@@ -72,9 +73,10 @@ export default defineType({
       of: [{
         type: 'object',
         fields: [
-          defineField({name: 'label',    title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
-          defineField({name: 'href',     title: 'Đường dẫn',    type: 'string'}),
-          defineField({name: 'external', title: 'Mở tab mới',   type: 'boolean', initialValue: false}),
+          defineField({name: 'label',    title: 'Tên (Tiếng Việt)', type: 'string', validation: R => R.required()}),
+          defineField({name: 'label_en', title: 'Tên (English)',     type: 'string'}),
+          defineField({name: 'href',     title: 'Đường dẫn',         type: 'string'}),
+          defineField({name: 'external', title: 'Mở tab mới',        type: 'boolean', initialValue: false}),
         ],
         preview: {select: {title: 'label', subtitle: 'href'}},
       }],

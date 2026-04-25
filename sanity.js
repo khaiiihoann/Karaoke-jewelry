@@ -7,6 +7,7 @@ const USD_RATE = 27000;
 let _lang = localStorage.getItem('kj_lang') || 'vi';
 let _notifVi = '', _notifEn = '';
 let _footerLinks = null;
+let _navLeftItems = null;
 
 function getLang() { return _lang; }
 
@@ -18,6 +19,7 @@ function setLang(l) {
     el.textContent = el.getAttribute('data-' + l);
   });
   updateNotifBar();
+  if (_navLeftItems) _applyNavLeft(_navLeftItems);
   if (_footerLinks) _applyFooterLinks(_footerLinks);
   window.dispatchEvent(new CustomEvent('langchange', {detail: l}));
 }
@@ -85,6 +87,19 @@ function updateNotifBar() {
   if (text) inner.innerHTML = `<span>${text}</span><span>&mdash;</span><span>${text}</span><span>&mdash;</span><span>${text}</span><span>&mdash;</span>`;
 }
 
+// ── Nav left ──────────────────────────────────────────────────────────────────
+function _applyNavLeft(items) {
+  _navLeftItems = items;
+  const navL = document.querySelector('.nav-l');
+  if (!navL) return;
+  const current = window.location.pathname.split('/').pop() || 'index.html';
+  navL.innerHTML = items.map(item => {
+    const label = (_lang === 'en' && item.label_en) ? item.label_en : item.label;
+    const isActive = item.href && item.href.includes(current);
+    return `<a href="${item.href || '#'}"${isActive ? ' class="active"' : ''}>${label}</a>`;
+  }).join('');
+}
+
 // ── Footer links ──────────────────────────────────────────────────────────────
 function _applyFooterLinks(links) {
   document.querySelectorAll('.footer-links').forEach(el => {
@@ -110,13 +125,7 @@ function applySettings(settings) {
   }
 
   if (settings.navLeft?.length) {
-    const navL = document.querySelector('.nav-l');
-    if (navL) {
-      const current = window.location.pathname.split('/').pop() || 'index.html';
-      navL.innerHTML = settings.navLeft.map(item =>
-        `<a href="${item.href || '#'}"${item.href && item.href.includes(current) ? ' class="active"' : ''}>${item.label}</a>`
-      ).join('');
-    }
+    _applyNavLeft(settings.navLeft);
   }
 
   if (settings.navRight?.length) {
