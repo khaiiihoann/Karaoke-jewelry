@@ -63,12 +63,21 @@ function sanityImageUrl(imageField, {w, h, fit} = {}) {
 }
 
 const _CAT_EN = {'Nhẫn':'Ring','Bông tai':'Earrings','Dây Chuyền':'Necklace','Vòng Tay':'Bracelet','Charm':'Charm'};
+const _CAT_PREFIXES = {
+  'Nhẫn':       ['Nhẫn '],
+  'Bông tai':   ['Bông tai ', 'Bông '],
+  'Dây Chuyền': ['Dây Chuyền ', 'Dây ', 'Chuyền '],
+  'Vòng Tay':   ['Vòng Tay ', 'Vòng '],
+  'Charm':      ['Charm '],
+};
 function _autoNameEn(name, cat) {
   const en = _CAT_EN[cat];
   if (!en) return name;
-  if (name.startsWith(cat + ' ')) return name.slice(cat.length + 1) + ' ' + en;
+  for (const prefix of (_CAT_PREFIXES[cat] || [])) {
+    if (name.startsWith(prefix)) return name.slice(prefix.length) + ' ' + en;
+  }
   if (name.endsWith(' ' + cat)) return name.slice(0, -(cat.length + 1)) + ' ' + en;
-  return name + ' ' + en;
+  return name;
 }
 
 function normalizeProduct(p) {
