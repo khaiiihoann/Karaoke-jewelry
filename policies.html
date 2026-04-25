@@ -17,20 +17,18 @@ a,a:visited{color:inherit;text-decoration:none;}
 .nav-logo img{height:22px;display:block;}
 
 .page-wrap{max-width:680px;margin:0 auto;padding:100px 24px 80px;}
-
 .page-title{font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#888;margin-bottom:48px;}
 
-.policy-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:56px;border-bottom:1px solid #e0e0e0;padding-bottom:20px;}
-.policy-nav a{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#888;padding:6px 0;border-bottom:1px solid transparent;}
-.policy-nav a:hover{color:#111;border-color:#111;}
+.policy-nav{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:56px;border-bottom:1px solid #e0e0e0;padding-bottom:20px;}
+.policy-nav a{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#888;}
+.policy-nav a:hover{color:#111;}
 
-.policy-section{margin-bottom:56px;padding-top:8px;}
+.policy-section{margin-bottom:56px;}
 .policy-section h2{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;font-weight:400;}
-.policy-section p{font-size:13px;line-height:1.8;color:#444;margin-bottom:14px;}
-.policy-section ul{font-size:13px;line-height:1.8;color:#444;margin-bottom:14px;padding-left:20px;}
-.policy-section ul li{margin-bottom:6px;}
-.policy-section a{color:#111;text-decoration:underline;}
-
+.policy-body p{font-size:13px;line-height:1.9;color:#444;margin-bottom:14px;}
+.policy-body ul{font-size:13px;line-height:1.9;color:#444;margin-bottom:14px;padding-left:18px;}
+.policy-body ul li{margin-bottom:4px;}
+.policy-body a{color:#111;text-decoration:underline;}
 .divider{border:none;border-top:1px solid #e0e0e0;margin-bottom:56px;}
 
 .footer{border-top:1px solid #111;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
@@ -43,7 +41,6 @@ a,a:visited{color:inherit;text-decoration:none;}
   .nav-r a{display:none;}
   .nav{justify-content:center;}
   .page-wrap{padding:80px 18px 60px;}
-  .policy-nav{gap:12px;}
   .footer{flex-direction:column;align-items:flex-start;}
 }
 </style>
@@ -67,7 +64,6 @@ a,a:visited{color:inherit;text-decoration:none;}
 
 <div class="page-wrap">
   <div class="page-title">Chính sách</div>
-
   <nav class="policy-nav">
     <a href="#refund">Hoàn trả</a>
     <a href="#shipping">Vận chuyển</a>
@@ -75,75 +71,9 @@ a,a:visited{color:inherit;text-decoration:none;}
     <a href="#terms">Điều khoản</a>
     <a href="#contact">Liên hệ</a>
   </nav>
-
-  <!-- REFUND -->
-  <section class="policy-section" id="refund">
-    <h2>Chính sách hoàn trả</h2>
-    <p>KARAOKE JEWELRY chấp nhận đổi/trả trong vòng <strong>7 ngày</strong> kể từ ngày nhận hàng, với điều kiện:</p>
-    <ul>
-      <li>Sản phẩm chưa qua sử dụng, còn nguyên vẹn</li>
-      <li>Có lỗi từ phía nhà sản xuất (hàng lỗi, sai sản phẩm)</li>
-      <li>Còn đầy đủ bao bì gốc</li>
-    </ul>
-    <p>Sản phẩm <strong>made to order</strong> (đặt theo yêu cầu) không áp dụng hoàn tiền — chỉ hỗ trợ đổi nếu có lỗi sản xuất.</p>
-    <p>Để yêu cầu đổi/trả, liên hệ qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a> kèm ảnh sản phẩm.</p>
-  </section>
-
-  <hr class="divider">
-
-  <!-- SHIPPING -->
-  <section class="policy-section" id="shipping">
-    <h2>Chính sách vận chuyển</h2>
-    <p>Tất cả sản phẩm của KARAOKE JEWELRY đều là <strong>made to order</strong> — được làm thủ công sau khi đặt hàng.</p>
-    <ul>
-      <li><strong>Thời gian xử lý:</strong> 7–14 ngày làm việc</li>
-      <li><strong>Giao hàng nội địa:</strong> 2–4 ngày sau khi hoàn thành</li>
-      <li><strong>Giao hàng quốc tế:</strong> 7–21 ngày (liên hệ để biết thêm)</li>
-    </ul>
-    <p>Phí vận chuyển được tính tại bước thanh toán. Đặt hàng qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a>.</p>
-  </section>
-
-  <hr class="divider">
-
-  <!-- PRIVACY -->
-  <section class="policy-section" id="privacy">
-    <h2>Chính sách bảo mật</h2>
-    <p>KARAOKE JEWELRY chỉ thu thập thông tin cần thiết để xử lý đơn hàng, bao gồm:</p>
-    <ul>
-      <li>Tên và địa chỉ giao hàng</li>
-      <li>Số điện thoại liên lạc</li>
-      <li>Thông tin đơn hàng trao đổi qua Instagram</li>
-    </ul>
-    <p>Thông tin của bạn không được chia sẻ với bên thứ ba, ngoại trừ đơn vị vận chuyển để giao hàng.</p>
-    <p>Website sử dụng Vercel Analytics để đo lường lượt truy cập ẩn danh — không lưu thông tin cá nhân.</p>
-  </section>
-
-  <hr class="divider">
-
-  <!-- TERMS -->
-  <section class="policy-section" id="terms">
-    <h2>Điều khoản dịch vụ</h2>
-    <p>Bằng cách đặt hàng tại KARAOKE JEWELRY, bạn đồng ý với các điều khoản sau:</p>
-    <ul>
-      <li>Tất cả sản phẩm là bạc 925 sterling silver, làm thủ công tại Việt Nam</li>
-      <li>Màu sắc và chi tiết sản phẩm thực tế có thể chênh lệch nhẹ so với hình ảnh do ánh sáng chụp</li>
-      <li>Đơn hàng được xác nhận sau khi thanh toán đặt cọc/toàn bộ qua Instagram</li>
-      <li>KARAOKE JEWELRY có quyền từ chối đơn hàng trong trường hợp hết vật liệu hoặc sản phẩm ngừng sản xuất</li>
-    </ul>
-    <p>Website karaoke-jewelry.com chỉ để xem giá và thông tin sản phẩm. Đặt hàng thực hiện qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a>.</p>
-  </section>
-
-  <hr class="divider">
-
-  <!-- CONTACT -->
-  <section class="policy-section" id="contact">
-    <h2>Liên hệ</h2>
-    <p>Mọi thắc mắc về sản phẩm, đơn hàng hoặc chính sách, vui lòng liên hệ qua:</p>
-    <ul>
-      <li><strong>Instagram:</strong> <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">@karaoke.jewelry</a></li>
-    </ul>
-    <p>Thời gian phản hồi thường trong vòng 24 giờ (trừ cuối tuần và ngày lễ).</p>
-  </section>
+  <div id="policyContent">
+    <div style="padding:40px 0;font-size:11px;letter-spacing:.1em;color:#aaa;">Loading...</div>
+  </div>
 </div>
 
 <footer class="footer">
@@ -157,5 +87,94 @@ a,a:visited{color:inherit;text-decoration:none;}
   <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
 </footer>
 
+<script src="sanity.js"></script>
+<script>
+const DEFAULTS = {
+  policyRefund: `Tất cả sản phẩm của KARAOKE JEWELRY đều là made to order.
+
+- Chấp nhận đổi/trả trong vòng 7 ngày kể từ ngày nhận hàng
+- Sản phẩm chưa qua sử dụng, còn nguyên vẹn
+- Có lỗi từ phía nhà sản xuất (hàng lỗi, sai sản phẩm)
+- Còn đầy đủ bao bì gốc
+
+Để yêu cầu đổi/trả, liên hệ qua Instagram @karaoke.jewelry kèm ảnh sản phẩm.`,
+
+  policyShipping: `Tất cả sản phẩm được làm thủ công sau khi đặt hàng.
+
+- Thời gian xử lý: 7–14 ngày làm việc
+- Giao hàng nội địa: 2–4 ngày sau khi hoàn thành
+- Giao hàng quốc tế: 7–21 ngày (liên hệ để biết thêm)
+
+Phí vận chuyển được tính tại bước thanh toán. Đặt hàng qua Instagram @karaoke.jewelry.`,
+
+  policyPrivacy: `KARAOKE JEWELRY chỉ thu thập thông tin cần thiết để xử lý đơn hàng.
+
+- Tên và địa chỉ giao hàng
+- Số điện thoại liên lạc
+- Thông tin đơn hàng trao đổi qua Instagram
+
+Thông tin của bạn không được chia sẻ với bên thứ ba, ngoại trừ đơn vị vận chuyển để giao hàng.`,
+
+  policyTerms: `Bằng cách đặt hàng tại KARAOKE JEWELRY, bạn đồng ý với các điều khoản sau:
+
+- Tất cả sản phẩm là bạc 925 sterling silver, làm thủ công tại Việt Nam
+- Màu sắc và chi tiết thực tế có thể chênh lệch nhẹ so với hình ảnh
+- Đơn hàng được xác nhận sau khi thanh toán qua Instagram
+- Website karaoke-jewelry.com chỉ để xem giá — đặt hàng qua Instagram`,
+
+  policyContact: `Mọi thắc mắc vui lòng liên hệ qua:
+
+- Instagram: @karaoke.jewelry
+- Thời gian phản hồi: trong vòng 24 giờ (trừ cuối tuần và ngày lễ)`,
+};
+
+function renderText(text) {
+  if (!text) return '';
+  return text.split(/\n\n+/).map(para => {
+    const lines = para.trim().split('\n');
+    if (lines.length > 1 && lines.every(l => l.startsWith('- '))) {
+      return '<ul>' + lines.map(l => `<li>${l.slice(2)}</li>`).join('') + '</ul>';
+    }
+    if (lines[0].startsWith('- ')) {
+      const items = lines.filter(l => l.startsWith('- '));
+      const rest = lines.filter(l => !l.startsWith('- '));
+      return (rest.length ? `<p>${rest.join('<br>')}</p>` : '') +
+             '<ul>' + items.map(l => `<li>${l.slice(2)}</li>`).join('') + '</ul>';
+    }
+    return `<p>${para.trim().replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+}
+
+function section(id, title, text) {
+  return `
+    <section class="policy-section" id="${id}">
+      <h2>${title}</h2>
+      <div class="policy-body">${renderText(text)}</div>
+    </section>
+    <hr class="divider">
+  `;
+}
+
+async function init() {
+  const settings = await sanityFetch('*[_type=="settings"][0]{policyRefund,policyShipping,policyPrivacy,policyTerms,policyContact,navLeft,navRight,footerLinks,instagramUrl}');
+  applySettings(settings);
+  const s = settings || {};
+
+  document.getElementById('policyContent').innerHTML =
+    section('refund',   'Chính sách hoàn trả',   s.policyRefund   || DEFAULTS.policyRefund) +
+    section('shipping', 'Chính sách vận chuyển',  s.policyShipping || DEFAULTS.policyShipping) +
+    section('privacy',  'Chính sách bảo mật',     s.policyPrivacy  || DEFAULTS.policyPrivacy) +
+    section('terms',    'Điều khoản dịch vụ',     s.policyTerms    || DEFAULTS.policyTerms) +
+    section('contact',  'Liên hệ',                s.policyContact  || DEFAULTS.policyContact);
+
+  // Scroll to anchor if present
+  const hash = window.location.hash;
+  if (hash) {
+    setTimeout(() => document.querySelector(hash)?.scrollIntoView({behavior:'smooth'}), 100);
+  }
+}
+
+init();
+</script>
 </body>
 </html>

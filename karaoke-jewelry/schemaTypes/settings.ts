@@ -97,6 +97,34 @@ export default defineType({
       }],
     }),
 
+    // ── Policies ─────────────────────────────────────────────────────────────
+    defineField({
+      name: 'policyRefund',
+      title: 'Chính sách hoàn trả',
+      description: 'Dùng dấu "- " đầu dòng để tạo danh sách. Ngăn cách đoạn bằng dòng trống.',
+      type: 'text', rows: 10, group: 'policies',
+    }),
+    defineField({
+      name: 'policyShipping',
+      title: 'Chính sách vận chuyển',
+      type: 'text', rows: 10, group: 'policies',
+    }),
+    defineField({
+      name: 'policyPrivacy',
+      title: 'Chính sách bảo mật',
+      type: 'text', rows: 10, group: 'policies',
+    }),
+    defineField({
+      name: 'policyTerms',
+      title: 'Điều khoản dịch vụ',
+      type: 'text', rows: 10, group: 'policies',
+    }),
+    defineField({
+      name: 'policyContact',
+      title: 'Liên hệ',
+      type: 'text', rows: 6, group: 'policies',
+    }),
+
     // ── Notification bar ─────────────────────────────────────────────────────
     defineField({
       name: 'notifBarVi',
