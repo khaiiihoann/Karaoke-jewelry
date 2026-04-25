@@ -8,6 +8,7 @@ let _lang = localStorage.getItem('kj_lang') || 'vi';
 let _notifVi = '', _notifEn = '';
 let _footerLinks = null;
 let _navLeftItems = null;
+let _instagramUrl = 'https://ig.me/m/karaoke.jewelry';
 
 function getLang() { return _lang; }
 
@@ -112,11 +113,40 @@ function _applyNavLeft(items) {
   const navL = document.querySelector('.nav-l');
   if (!navL) return;
   const current = window.location.pathname.split('/').pop() || 'index.html';
-  navL.innerHTML = items.map(item => {
+  const linksHtml = items.map(item => {
     const label = (_lang === 'en' && item.label_en) ? item.label_en : item.label;
     const isActive = item.href && item.href.includes(current);
     return `<a href="${item.href || '#'}"${isActive ? ' class="active"' : ''}>${label}</a>`;
   }).join('');
+  navL.innerHTML = linksHtml;
+  const menu = document.querySelector('.mobile-menu');
+  if (menu) menu.innerHTML = linksHtml;
+}
+
+function initMobileMenu() {
+  const menu = document.querySelector('.mobile-menu');
+  const navL = document.querySelector('.nav-l');
+  if (menu && navL && !menu.innerHTML.trim()) menu.innerHTML = navL.innerHTML;
+}
+
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.querySelector('.hamburger');
+  if (!menu) return;
+  const open = menu.classList.toggle('open');
+  if (btn) btn.textContent = open ? '✕' : '☰';
+}
+
+function orderOnInstagram() {
+  if (typeof cart !== 'undefined' && cart.length) {
+    try {
+      const lines = cart.map(i => `- ${i.name}${i.qty > 1 ? ' x' + i.qty : ''}: ${formatPrice(i.priceRaw || 0)}`);
+      const total = cart.reduce((s, i) => s + (i.priceRaw || 0) * i.qty, 0);
+      lines.push((_lang === 'en' ? 'Total' : 'Tổng') + ': ' + formatPrice(total));
+      navigator.clipboard.writeText(lines.join('\n'));
+    } catch(e) {}
+  }
+  window.open(_instagramUrl, '_blank');
 }
 
 // ── Footer links ──────────────────────────────────────────────────────────────
@@ -140,6 +170,7 @@ function applySettings(settings) {
   }
 
   if (settings.instagramUrl) {
+    _instagramUrl = 'https://ig.me/m/' + settings.instagramUrl.replace(/.*instagram\.com\//,'').replace(/\//,'');
     document.querySelectorAll('a[href*="instagram.com"]').forEach(a => { a.href = settings.instagramUrl; });
   }
 

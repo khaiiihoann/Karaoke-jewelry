@@ -44,10 +44,17 @@ a,a:visited{color:inherit;text-decoration:none;}
 .lang-btn .lang-vi,.lang-btn .lang-en{color:#aaa;transition:color .15s;}
 [data-lang="vi"] .lang-btn .lang-vi,[data-lang="en"] .lang-btn .lang-en{color:#111;}
 
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:18px;color:#111;padding:0;line-height:1;}
+.mobile-menu{display:none;position:fixed;top:46px;left:0;right:0;background:#fff;border-bottom:1px solid #111;z-index:98;padding:0 20px;}
+.mobile-menu.open{display:block;}
+.mobile-menu a{display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#111;padding:14px 0;border-bottom:1px solid #f0f0f0;}
+.mobile-menu a:last-child{border-bottom:none;}
+
 @media(max-width:768px){
-  .nav-l{display:none;}
+  .nav-l a{display:none;}
+  .hamburger{display:block;}
   .nav-r a{display:none;}
-  .nav{justify-content:center;}
+  .nav{justify-content:space-between;}
   .page-wrap{grid-template-columns:1fr;padding:80px 18px 60px;gap:40px;}
   .map-wrap{aspect-ratio:4/3;}
   .footer{flex-direction:column;align-items:flex-start;}
@@ -58,6 +65,7 @@ a,a:visited{color:inherit;text-decoration:none;}
 
 <nav class="nav">
   <div class="nav-l">
+    <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
     <a href="shop.html" data-vi="cửa hàng" data-en="shop">cửa hàng</a>
     <a href="#" data-vi="bộ sưu tập" data-en="collections">bộ sưu tập</a>
     <a href="#" data-vi="giới thiệu" data-en="about">giới thiệu</a>
@@ -70,6 +78,7 @@ a,a:visited{color:inherit;text-decoration:none;}
     <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
   </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu"></div>
 
 <div class="page-wrap">
   <div class="store-info">
@@ -119,6 +128,9 @@ a,a:visited{color:inherit;text-decoration:none;}
 </footer>
 
 <script src="sanity.js"></script>
-<script>initLang();</script>
+<script>
+initLang();
+initMobileMenu();
+</script>
 </body>
 </html>
