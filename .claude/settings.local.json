@@ -16,7 +16,8 @@
       "Bash(git remote *)",
       "Bash(git branch *)",
       "Bash(git push *)",
-      "mcp__Sanity__create_documents_from_json"
+      "mcp__Sanity__create_documents_from_json",
+      "Bash(git commit *)"
     ]
   }
 }
