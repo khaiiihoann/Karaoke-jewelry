@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Store — KARAOKE JEWELRY</title>
+<meta name="description" content="KARAOKE JEWELRY Store — 402 Hai Bà Trưng, Phường Tân Định, TP Hồ Chí Minh. Mở cửa 9:00 - 21:00 hàng ngày.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;}
+a,a:visited{color:inherit;text-decoration:none;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:46px;position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1px solid #111;}
+.nav-l,.nav-r{display:flex;gap:20px;align-items:center;}
+.nav-l a,.nav-r a{font-size:11px;letter-spacing:.07em;color:#111;text-transform:uppercase;}
+.nav-logo{position:absolute;left:50%;transform:translateX(-50%);}
+.nav-logo img{height:22px;display:block;}
+
+.page-wrap{max-width:900px;margin:0 auto;padding:100px 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+
+.store-info{}
+.page-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#888;margin-bottom:36px;display:block;}
+.store-name{font-size:13px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:32px;font-weight:400;}
+
+.info-block{margin-bottom:28px;}
+.info-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:8px;}
+.info-value{font-size:13px;line-height:1.8;color:#111;}
+
+.hours-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 20px;}
+.hours-grid span{font-size:13px;color:#111;line-height:1.8;}
+.hours-grid .day{color:#888;}
+
+.ig-link{display:inline-block;margin-top:24px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#111;border-bottom:1px solid #111;padding-bottom:2px;}
+
+.map-side{}
+.map-wrap{width:100%;aspect-ratio:1/1;border:1px solid #111;overflow:hidden;}
+.map-wrap iframe{width:100%;height:100%;border:none;display:block;}
+
+.footer{border-top:1px solid #111;padding:13px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.footer-links{display:flex;gap:16px;}
+.footer-links a,.footer-ig{font-size:12px;letter-spacing:.01em;color:#888;}
+.footer-links a:hover,.footer-ig:hover{color:#111;}
+
+@media(max-width:768px){
+  .nav-l{display:none;}
+  .nav-r a{display:none;}
+  .nav{justify-content:center;}
+  .page-wrap{grid-template-columns:1fr;padding:80px 18px 60px;gap:40px;}
+  .map-wrap{aspect-ratio:4/3;}
+  .footer{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-l">
+    <a href="shop.html">shop</a>
+    <a href="#">collections</a>
+    <a href="#">custom</a>
+  </div>
+  <div class="nav-logo">
+    <a href="index.html"><img src="Brand Asset/logo/LOGO_NGANG_BLACK.png" alt="KARAOKE JEWELRY"></a>
+  </div>
+  <div class="nav-r">
+    <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
+    <a href="#">about</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="store-info">
+    <span class="page-label">Store</span>
+    <div class="store-name">KARAOKE JEWELRY</div>
+
+    <div class="info-block">
+      <div class="info-label">Địa chỉ</div>
+      <div class="info-value">402 Hai Bà Trưng<br>Phường Tân Định<br>TP Hồ Chí Minh</div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-label">Giờ mở cửa</div>
+      <div class="hours-grid">
+        <span class="day">Thứ 2 – Chủ nhật</span>
+        <span>9:00 – 21:00</span>
+      </div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-label">Liên hệ</div>
+      <div class="info-value">
+        <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="ig-link">Instagram @karaoke.jewelry</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-side">
+    <div class="map-wrap">
+      <iframe
+        src="https://maps.google.com/maps?q=402+Hai+Bà+Trưng,+Phường+Tân+Định,+Quận+1,+TP+Hồ+Chí+Minh&output=embed&z=16"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="policies.html">chính sách</a>
+    <a href="policies.html#contact">contact</a>
+    <a href="store.html">store</a>
+  </div>
+  <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
+</footer>
+
+</body>
+</html>
