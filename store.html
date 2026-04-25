@@ -41,6 +41,9 @@ a,a:visited{color:inherit;text-decoration:none;}
 .footer-links a,.footer-ig{font-size:12px;letter-spacing:.01em;color:#888;}
 .footer-links a:hover,.footer-ig:hover{color:#111;}
 
+.lang-btn .lang-vi,.lang-btn .lang-en{color:#aaa;transition:color .15s;}
+[data-lang="vi"] .lang-btn .lang-vi,[data-lang="en"] .lang-btn .lang-en{color:#111;font-weight:600;}
+
 @media(max-width:768px){
   .nav-l{display:none;}
   .nav-r a{display:none;}
@@ -63,8 +66,9 @@ a,a:visited{color:inherit;text-decoration:none;}
     <a href="index.html"><img src="Brand Asset/logo/LOGO_NGANG_BLACK.png" alt="KARAOKE JEWELRY"></a>
   </div>
   <div class="nav-r">
+    <button class="lang-btn" onclick="toggleLang()"><span class="lang-vi">VI</span>·<span class="lang-en">EN</span></button>
+    <span class="nav-sep">|</span>
     <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
-    <a href="#">about</a>
   </div>
 </nav>
 
@@ -74,20 +78,20 @@ a,a:visited{color:inherit;text-decoration:none;}
     <div class="store-name">KARAOKE JEWELRY</div>
 
     <div class="info-block">
-      <div class="info-label">Địa chỉ</div>
+      <div class="info-label" data-vi="Địa chỉ" data-en="Address">Địa chỉ</div>
       <div class="info-value">402 Hai Bà Trưng<br>Phường Tân Định<br>TP Hồ Chí Minh</div>
     </div>
 
     <div class="info-block">
-      <div class="info-label">Giờ mở cửa</div>
+      <div class="info-label" data-vi="Giờ mở cửa" data-en="Hours">Giờ mở cửa</div>
       <div class="hours-grid">
-        <span class="day">Thứ 2 – Chủ nhật</span>
+        <span class="day" data-vi="Thứ 2 – Chủ nhật" data-en="Mon – Sun">Thứ 2 – Chủ nhật</span>
         <span>9:00 – 21:00</span>
       </div>
     </div>
 
     <div class="info-block">
-      <div class="info-label">Liên hệ</div>
+      <div class="info-label" data-vi="Liên hệ" data-en="Contact">Liên hệ</div>
       <div class="info-value">
         <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="ig-link">Instagram @karaoke.jewelry</a>
       </div>
@@ -108,12 +112,14 @@ a,a:visited{color:inherit;text-decoration:none;}
 
 <footer class="footer">
   <div class="footer-links">
-    <a href="policies.html">chính sách</a>
+    <a href="policies.html" data-vi="chính sách" data-en="policies">chính sách</a>
     <a href="policies.html#contact">contact</a>
     <a href="store.html">store</a>
   </div>
   <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank" class="footer-ig">instagram</a>
 </footer>
 
+<script src="sanity.js"></script>
+<script>initLang();</script>
 </body>
 </html>

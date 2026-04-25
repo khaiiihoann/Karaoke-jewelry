@@ -1,7 +1,44 @@
 const SANITY_PROJECT_ID = 'idm6zp0i';
 const SANITY_DATASET = 'production';
 const SANITY_CDN = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/${SANITY_DATASET}`;
+const USD_RATE = 27000;
 
+// ── Language ──────────────────────────────────────────────────────────────────
+let _lang = localStorage.getItem('kj_lang') || 'vi';
+let _notifVi = '', _notifEn = '';
+let _footerLinks = null;
+
+function getLang() { return _lang; }
+
+function setLang(l) {
+  _lang = l;
+  localStorage.setItem('kj_lang', l);
+  document.documentElement.dataset.lang = l;
+  document.querySelectorAll('[data-vi][data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + l);
+  });
+  updateNotifBar();
+  if (_footerLinks) _applyFooterLinks(_footerLinks);
+  window.dispatchEvent(new CustomEvent('langchange', {detail: l}));
+}
+
+function toggleLang() { setLang(_lang === 'vi' ? 'en' : 'vi'); }
+
+function initLang() {
+  document.documentElement.dataset.lang = _lang;
+  document.querySelectorAll('[data-vi][data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + _lang);
+  });
+}
+
+// ── Price ─────────────────────────────────────────────────────────────────────
+function formatPrice(priceVND) {
+  if (!priceVND && priceVND !== 0) return '';
+  if (_lang === 'en') return '$' + Math.round(priceVND / USD_RATE);
+  return priceVND.toLocaleString('vi-VN') + ' ₫';
+}
+
+// ── Sanity fetch ──────────────────────────────────────────────────────────────
 async function sanityFetch(query) {
   const res = await fetch(`${SANITY_CDN}?query=${encodeURIComponent(query)}`);
   const data = await res.json();
@@ -24,36 +61,54 @@ function sanityImageUrl(imageField, {w, h, fit} = {}) {
 }
 
 function normalizeProduct(p) {
+  const name = (_lang === 'en' && p.name_en) ? p.name_en : p.name;
+  const description = (_lang === 'en' && p.description_en) ? p.description_en : (p.description || '');
   return {
     id: p._id,
-    name: p.name,
+    name,
     cat: p.category,
-    price: p.price.toLocaleString('vi-VN'),
+    price: formatPrice(p.price),
+    priceRaw: p.price,
     sizes: p.sizes || [],
     imgA: p.imageA ? sanityImageUrl(p.imageA, {w: '800'}) : (p.imgA || ''),
     imgB: p.imageB ? sanityImageUrl(p.imageB, {w: '800'}) : (p.imgB || ''),
-    description: p.description || '',
+    description,
     gallery: (p.gallery || []).map(img => sanityImageUrl(img, {w: '1200'})).filter(Boolean),
   };
 }
 
+// ── Notif bar ─────────────────────────────────────────────────────────────────
+function updateNotifBar() {
+  const inner = document.querySelector('.notif-inner');
+  if (!inner) return;
+  const text = (_lang === 'en' ? _notifEn : _notifVi) || _notifVi || _notifEn;
+  if (text) inner.innerHTML = `<span>${text}</span><span>&mdash;</span><span>${text}</span><span>&mdash;</span><span>${text}</span><span>&mdash;</span>`;
+}
+
+// ── Footer links ──────────────────────────────────────────────────────────────
+function _applyFooterLinks(links) {
+  document.querySelectorAll('.footer-links').forEach(el => {
+    el.innerHTML = links.map(item => {
+      const label = (_lang === 'en' && item.label_en) ? item.label_en : item.label;
+      return `<a href="${item.href || '#'}">${label}</a>`;
+    }).join('');
+  });
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────────
 function applySettings(settings) {
   if (!settings) return;
 
-  // Notification bar
-  const inner = document.querySelector('.notif-inner');
-  if (inner && (settings.notifBarVi || settings.notifBarEn)) {
-    const vi = settings.notifBarVi || '';
-    const en = settings.notifBarEn || '';
-    inner.innerHTML = `<span>${vi}</span><span>&mdash;</span><span>${en}</span><span>&mdash;</span><span>${vi}</span><span>&mdash;</span><span>${en}</span><span>&mdash;</span>`;
+  if (settings.notifBarVi || settings.notifBarEn) {
+    _notifVi = settings.notifBarVi || '';
+    _notifEn = settings.notifBarEn || '';
+    updateNotifBar();
   }
 
-  // Instagram URL
   if (settings.instagramUrl) {
     document.querySelectorAll('a[href*="instagram.com"]').forEach(a => { a.href = settings.instagramUrl; });
   }
 
-  // Nav left
   if (settings.navLeft?.length) {
     const navL = document.querySelector('.nav-l');
     if (navL) {
@@ -64,28 +119,46 @@ function applySettings(settings) {
     }
   }
 
-  // Nav right (skip cart button)
   if (settings.navRight?.length) {
     const navR = document.querySelector('.nav-r');
     if (navR) {
       const cartBtn = navR.querySelector('.cart-btn');
-      navR.innerHTML = settings.navRight.map(item =>
-        `<a href="${item.href || '#'}"${item.external ? ' target="_blank"' : ''}>${item.label}</a>`
-      ).join('') + (cartBtn ? '<span class="nav-sep">|</span>' : '');
-      if (cartBtn) navR.appendChild(cartBtn);
+      navR.innerHTML = '';
+
+      const lb = document.createElement('button');
+      lb.className = 'lang-btn';
+      lb.onclick = toggleLang;
+      lb.innerHTML = '<span class="lang-vi">VI</span>·<span class="lang-en">EN</span>';
+      navR.appendChild(lb);
+
+      const lsep = document.createElement('span');
+      lsep.className = 'nav-sep';
+      lsep.textContent = '|';
+      navR.appendChild(lsep);
+
+      settings.navRight.forEach(item => {
+        const a = document.createElement('a');
+        a.href = item.href || '#';
+        if (item.external) a.target = '_blank';
+        a.textContent = item.label;
+        navR.appendChild(a);
+      });
+
+      if (cartBtn) {
+        const sep = document.createElement('span');
+        sep.className = 'nav-sep';
+        sep.textContent = '|';
+        navR.appendChild(sep);
+        navR.appendChild(cartBtn);
+      }
     }
   }
 
-  // Footer links
   if (settings.footerLinks?.length) {
-    document.querySelectorAll('.footer-links').forEach(el => {
-      el.innerHTML = settings.footerLinks.map(item =>
-        `<a href="${item.href || '#'}">${item.label}</a>`
-      ).join('');
-    });
+    _footerLinks = settings.footerLinks;
+    _applyFooterLinks(settings.footerLinks);
   }
 
-  // Hero image (index.html only)
   if (settings.heroImage || settings.heroImageUrl) {
     const hero = document.querySelector('.hero');
     if (hero) {

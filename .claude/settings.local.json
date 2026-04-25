@@ -17,7 +17,10 @@
       "Bash(git branch *)",
       "Bash(git push *)",
       "mcp__Sanity__create_documents_from_json",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "mcp__Sanity__patch_document_from_json",
+      "mcp__Sanity__publish_documents",
+      "mcp__Sanity__query_documents"
     ]
   }
 }

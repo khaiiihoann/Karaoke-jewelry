@@ -123,6 +123,9 @@ body{padding-bottom:42px;}
 
 .not-found{padding:120px 40px;text-align:center;font-size:12px;letter-spacing:.1em;color:#aaa;}
 
+.lang-btn .lang-vi,.lang-btn .lang-en{color:#aaa;transition:color .15s;}
+[data-lang="vi"] .lang-btn .lang-vi,[data-lang="en"] .lang-btn .lang-en{color:#111;font-weight:600;}
+
 @media(max-width:768px){
   .nav-l{display:none;}
   .nav-r a{display:none;}
@@ -168,8 +171,9 @@ body{padding-bottom:42px;}
     </a>
   </div>
   <div class="nav-r">
+    <button class="lang-btn" onclick="toggleLang()"><span class="lang-vi">VI</span>·<span class="lang-en">EN</span></button>
+    <span class="nav-sep">|</span>
     <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
-    <a href="#">about</a>
     <span class="nav-sep">|</span>
     <button class="cart-btn" onclick="toggleCart()">
       Cart
@@ -210,20 +214,57 @@ body{padding-bottom:42px;}
 <script src="sanity.js"></script>
 <script>
 const catDesc = {
-  'Nhẫn':       'Nhẫn bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
-  'Bông tai':   'Bông tai bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
-  'Dây Chuyền': 'Dây chuyền bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
-  'Vòng Tay':   'Vòng tay bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
-  'Charm':      'Charm bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  vi: {
+    'Nhẫn':       'Nhẫn bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+    'Bông tai':   'Bông tai bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+    'Dây Chuyền': 'Dây chuyền bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+    'Vòng Tay':   'Vòng tay bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+    'Charm':      'Charm bạc 925 được thiết kế và làm thủ công bởi KARAOKE JEWELRY.',
+  },
+  en: {
+    'Nhẫn':       '925 sterling silver ring, handcrafted by KARAOKE JEWELRY.',
+    'Bông tai':   '925 sterling silver earrings, handcrafted by KARAOKE JEWELRY.',
+    'Dây Chuyền': '925 sterling silver necklace, handcrafted by KARAOKE JEWELRY.',
+    'Vòng Tay':   '925 sterling silver bracelet, handcrafted by KARAOKE JEWELRY.',
+    'Charm':      '925 sterling silver charm, handcrafted by KARAOKE JEWELRY.',
+  },
 };
 
 let product = null;
+let _rawProduct = null;
+let _rawRelated = [];
+
+initLang();
+window.addEventListener('langchange', () => {
+  if (!_rawProduct) return;
+  product = normalizeProduct(_rawProduct);
+  const nameEl = document.querySelector('.product-name');
+  const priceEl = document.querySelector('.product-price');
+  const descEl = document.querySelector('.product-desc');
+  if (nameEl) nameEl.textContent = product.name;
+  if (priceEl) priceEl.textContent = product.price;
+  if (descEl) descEl.textContent = product.description || catDesc[getLang()][product.cat] || '';
+  document.querySelectorAll('.rel-price').forEach((el, i) => {
+    if (_rawRelated[i]) el.textContent = formatPrice(_rawRelated[i].price);
+  });
+  document.querySelectorAll('.rel-name').forEach((el, i) => {
+    if (_rawRelated[i]) el.textContent = normalizeProduct(_rawRelated[i]).name;
+  });
+  const igNote = document.querySelector('.ig-note');
+  if (igNote) {
+    const igUrl = 'https://www.instagram.com/karaoke.jewelry/';
+    igNote.innerHTML = getLang() === 'en'
+      ? `To order, contact us via <a href="${igUrl}" target="_blank">Instagram @karaoke.jewelry</a>`
+      : `Để đặt hàng, liên hệ qua <a href="${igUrl}" target="_blank">Instagram @karaoke.jewelry</a>`;
+  }
+  if (cartOpen) renderCartItems();
+});
 
 init();
 async function init() {
   const urlId = new URLSearchParams(location.search).get('id');
   const [raw, settings] = await Promise.all([
-    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,price,category,sizes,imgA,imgB,imageA,imageB,description,gallery[]}`),
+    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,name_en,price,category,sizes,imgA,imgB,imageA,imageB,description,description_en,gallery[]}`),
     sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight,footerLinks}')
   ]);
 
@@ -235,6 +276,7 @@ async function init() {
     return;
   }
 
+  _rawProduct = raw;
   product = normalizeProduct(raw);
   document.title = product.name + ' — KARAOKE JEWELRY';
   const ogImg = product.imgA || 'https://www.karaoke-jewelry.com/Brand Asset/logo/LOGO_VUONG_BLACK.png';
@@ -244,9 +286,10 @@ async function init() {
   document.querySelector('meta[name="description"]').setAttribute('content', product.description || product.name + ' — bạc 925 thiết kế độc quyền KARAOKE JEWELRY.');
 
   const related = await sanityFetch(
-    `*[_type=="product"&&category=="${raw.category}"&&_id!="${urlId}"&&isVisible!=false]|order(sortOrder asc)[0..3]{_id,name,price,imgA,imgB,imageA,imageB}`
+    `*[_type=="product"&&category=="${raw.category}"&&_id!="${urlId}"&&isVisible!=false]|order(sortOrder asc)[0..3]{_id,name,name_en,price,imgA,imgB,imageA,imageB}`
   );
-  const relatedNorm = (related || []).map(normalizeProduct);
+  _rawRelated = related || [];
+  const relatedNorm = _rawRelated.map(normalizeProduct);
 
   const images = product.gallery?.length
     ? product.gallery
@@ -282,7 +325,7 @@ async function init() {
                 ${r.imgB && r.imgB !== r.imgA ? `<div class="img-hover"><img src="${r.imgB}" alt="${r.name}" loading="lazy"></div>` : ''}
                 <div class="rel-label">
                   <span class="rel-name">${r.name}</span>
-                  <span class="rel-price">${r.price}&#8363;</span>
+                  <span class="rel-price">${r.price}</span>
                 </div>
               </div>
             </div>`).join('')}
@@ -302,13 +345,13 @@ async function init() {
       <div class="info-side">
         <div class="info-top">
           <span class="product-name">${product.name}</span>
-          <span class="product-price">${product.price}&#8363;</span>
+          <span class="product-price">${product.price}</span>
         </div>
         <div class="tax-note">Tax included. Shipping calculated at checkout.</div>
-        <p class="product-desc">${product.description || catDesc[product.cat] || ''}</p>
+        <p class="product-desc">${product.description || catDesc[getLang()][product.cat] || ''}</p>
         <ul class="product-detail">
           <li>925 sterling silver</li>
-          <li>thiết kế độc quyền KARAOKE</li>
+          <li data-vi="thiết kế độc quyền KARAOKE" data-en="exclusive KARAOKE design">${getLang()==='en'?'exclusive KARAOKE design':'thiết kế độc quyền KARAOKE'}</li>
           <li>made to order</li>
         </ul>
         ${sizeHTML}
@@ -320,13 +363,13 @@ async function init() {
           </button>
         </div>
         <button class="add-btn" onclick="addToCartProduct()">add to cart</button>
-        <p class="ig-note">Để đặt hàng, liên hệ qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a></p>
+        <p class="ig-note">${getLang()==='en'?'To order, contact us via <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a>':'Để đặt hàng, liên hệ qua <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">Instagram @karaoke.jewelry</a>'}</p>
       </div>
     </div>
     ${relatedHTML}
     <div class="footer">
       <div class="footer-links">
-        <a href="policies.html">chính sách</a>
+        <a href="policies.html" data-vi="chính sách" data-en="policies">${getLang()==='en'?'policies':'chính sách'}</a>
         <a href="policies.html#contact">contact</a>
         <a href="store.html">store</a>
       </div>
@@ -426,7 +469,7 @@ function addToCartProduct() {
   const label = size ? `${product.name} (${size})` : product.name;
   const ex = cart.find(x => x.key === key);
   if (ex) ex.qty++;
-  else cart.push({ key, name: label, price: product.price, img: product.imgA, qty: 1 });
+  else cart.push({ key, name: label, price: product.price, priceRaw: product.priceRaw, img: product.imgA, qty: 1 });
   updateBadge();
   showToast();
 }
@@ -441,8 +484,8 @@ function updateBadge() {
   b.style.display = n ? 'flex' : 'none';
   b.textContent = n;
   document.getElementById('cartFoot').style.display = cart.length ? 'block' : 'none';
-  const total = cart.reduce((s, x) => s + parseInt(x.price.replace(/\./g, '')) * x.qty, 0);
-  document.getElementById('cartTotal').textContent = total.toLocaleString('vi-VN') + '₫';
+  const total = cart.reduce((s, x) => s + (x.priceRaw || 0) * x.qty, 0);
+  document.getElementById('cartTotal').textContent = formatPrice(total);
 }
 function renderCartItems() {
   const b = document.getElementById('cartBody');
@@ -452,7 +495,7 @@ function renderCartItems() {
       <div class="cthumb">${item.img ? `<img src="${item.img}" alt="${item.name}">` : ''}</div>
       <div class="cinfo">
         <div class="cname">${item.name}${item.qty > 1 ? ' x' + item.qty : ''}</div>
-        <div class="cprice">${item.price}₫</div>
+        <div class="cprice">${formatPrice(item.priceRaw || 0)}</div>
         <button class="crm" onclick="removeFromCart('${item.key}')">remove</button>
       </div>
     </div>`).join('');

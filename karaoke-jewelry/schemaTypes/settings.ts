@@ -90,40 +90,25 @@ export default defineType({
       of: [{
         type: 'object',
         fields: [
-          defineField({name: 'label', title: 'Tên hiển thị', type: 'string', validation: R => R.required()}),
-          defineField({name: 'href',  title: 'Đường dẫn',    type: 'string'}),
+          defineField({name: 'label',    title: 'Tên (Tiếng Việt)', type: 'string', validation: R => R.required()}),
+          defineField({name: 'label_en', title: 'Tên (English)',     type: 'string'}),
+          defineField({name: 'href',     title: 'Đường dẫn',         type: 'string'}),
         ],
         preview: {select: {title: 'label', subtitle: 'href'}},
       }],
     }),
 
     // ── Policies ─────────────────────────────────────────────────────────────
-    defineField({
-      name: 'policyRefund',
-      title: 'Chính sách hoàn trả',
-      description: 'Dùng dấu "- " đầu dòng để tạo danh sách. Ngăn cách đoạn bằng dòng trống.',
-      type: 'text', rows: 10, group: 'policies',
-    }),
-    defineField({
-      name: 'policyShipping',
-      title: 'Chính sách vận chuyển',
-      type: 'text', rows: 10, group: 'policies',
-    }),
-    defineField({
-      name: 'policyPrivacy',
-      title: 'Chính sách bảo mật',
-      type: 'text', rows: 10, group: 'policies',
-    }),
-    defineField({
-      name: 'policyTerms',
-      title: 'Điều khoản dịch vụ',
-      type: 'text', rows: 10, group: 'policies',
-    }),
-    defineField({
-      name: 'policyContact',
-      title: 'Liên hệ',
-      type: 'text', rows: 6, group: 'policies',
-    }),
+    defineField({name: 'policyRefund',       title: 'Hoàn trả (VI)',    description: 'Dùng "- " đầu dòng cho danh sách. Dòng trống ngăn đoạn.', type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyRefund_en',    title: 'Hoàn trả (EN)',    type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyShipping',     title: 'Vận chuyển (VI)',  type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyShipping_en',  title: 'Vận chuyển (EN)',  type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyPrivacy',      title: 'Bảo mật (VI)',     type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyPrivacy_en',   title: 'Bảo mật (EN)',     type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyTerms',        title: 'Điều khoản (VI)',  type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyTerms_en',     title: 'Điều khoản (EN)',  type: 'text', rows: 10, group: 'policies'}),
+    defineField({name: 'policyContact',      title: 'Liên hệ (VI)',     type: 'text', rows: 6,  group: 'policies'}),
+    defineField({name: 'policyContact_en',   title: 'Liên hệ (EN)',     type: 'text', rows: 6,  group: 'policies'}),
 
     // ── Notification bar ─────────────────────────────────────────────────────
     defineField({
