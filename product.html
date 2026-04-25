@@ -4,6 +4,13 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>KARAOKE JEWELRY</title>
+<meta name="description" content="Trang sức bạc 925 KARAOKE JEWELRY">
+<meta property="og:type" content="product">
+<meta property="og:title" content="KARAOKE JEWELRY">
+<meta property="og:description" content="Trang sức bạc 925 thiết kế độc quyền, làm thủ công tại Việt Nam.">
+<meta property="og:image" content="https://www.karaoke-jewelry.com/Brand Asset/logo/LOGO_VUONG_BLACK.png">
+<meta property="og:url" content="https://www.karaoke-jewelry.com/product.html">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;width:100%;}
@@ -130,6 +137,19 @@ body{padding-bottom:42px;}
   .footer{flex-direction:column;align-items:flex-start;gap:12px;}
   .cart-panel{width:100%;}
 }
+@media(max-width:480px){
+  .gallery-side{height:90vw;}
+  .product-name{font-size:14px;letter-spacing:.1em;}
+  .product-price{font-size:13px;}
+  .info-side{padding:16px 14px 40px;}
+  .size-grid{gap:6px;}
+  .size-btn{min-width:36px;padding:8px 6px;font-size:10px;}
+  .add-btn{font-size:10px;letter-spacing:.15em;padding:14px;}
+  .related-hdr{font-size:11px;letter-spacing:.2em;}
+  .rel-name,.rel-price{font-size:10px;}
+  .footer-links{gap:10px;}
+  .footer-links a,.footer-ig{font-size:12px;}
+}
 </style>
     <script defer src="/_vercel/insights/script.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
@@ -217,6 +237,11 @@ async function init() {
 
   product = normalizeProduct(raw);
   document.title = product.name + ' — KARAOKE JEWELRY';
+  const ogImg = product.imgA || 'https://www.karaoke-jewelry.com/Brand Asset/logo/LOGO_VUONG_BLACK.png';
+  document.querySelector('meta[property="og:title"]').setAttribute('content', product.name + ' — KARAOKE JEWELRY');
+  document.querySelector('meta[property="og:description"]').setAttribute('content', product.description || 'Bạc 925, thiết kế độc quyền KARAOKE JEWELRY.');
+  document.querySelector('meta[property="og:image"]').setAttribute('content', ogImg);
+  document.querySelector('meta[name="description"]').setAttribute('content', product.description || product.name + ' — bạc 925 thiết kế độc quyền KARAOKE JEWELRY.');
 
   const related = await sanityFetch(
     `*[_type=="product"&&category=="${raw.category}"&&_id!="${urlId}"&&isVisible!=false]|order(sortOrder asc)[0..3]{_id,name,price,imgA,imgB,imageA,imageB}`
@@ -301,10 +326,10 @@ async function init() {
     ${relatedHTML}
     <div class="footer">
       <div class="footer-links">
-        <a href="#">refund policy</a>
-        <a href="#">privacy policy</a>
-        <a href="#">terms of service</a>
-        <a href="#">shipping policy</a>
+        <a href="policies.html#refund">refund policy</a>
+        <a href="policies.html#privacy">privacy policy</a>
+        <a href="policies.html#terms">terms of service</a>
+        <a href="policies.html#shipping">shipping policy</a>
         <a href="#">legal notice</a>
         <a href="#">contact information</a>
       </div>

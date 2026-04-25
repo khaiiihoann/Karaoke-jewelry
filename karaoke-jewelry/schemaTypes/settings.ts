@@ -15,6 +15,7 @@ export default defineType({
     {name: 'homepage', title: 'Trang chủ', default: true},
     {name: 'nav',      title: 'Navbar'},
     {name: 'footer',   title: 'Footer'},
+    {name: 'policies', title: 'Chính sách'},
     {name: 'notif',    title: 'Thông báo'},
     {name: 'social',   title: 'Mạng xã hội'},
   ],
