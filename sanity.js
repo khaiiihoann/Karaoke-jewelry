@@ -187,7 +187,7 @@ function applySettings(settings) {
       const lb = document.createElement('button');
       lb.className = 'lang-btn';
       lb.onclick = toggleLang;
-      lb.innerHTML = '<span class="lang-vi">Việt Nam</span> / <span class="lang-en">English</span>';
+      lb.innerHTML = '<span class="lang-vi"><span class="lang-long">Việt Nam</span><span class="lang-short">VI</span></span> / <span class="lang-en"><span class="lang-long">English</span><span class="lang-short">EN</span></span>';
       navR.appendChild(lb);
 
       settings.navRight.forEach(item => {

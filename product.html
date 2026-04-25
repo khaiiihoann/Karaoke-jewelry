@@ -125,6 +125,7 @@ body{padding-bottom:42px;}
 
 .lang-btn .lang-vi,.lang-btn .lang-en{color:#aaa;transition:color .15s;}
 [data-lang="vi"] .lang-btn .lang-vi,[data-lang="en"] .lang-btn .lang-en{color:#111;}
+.lang-short{display:none;}
 
 .hamburger{display:none;background:none;border:none;cursor:pointer;font-size:20px;color:#111;padding:4px;line-height:1;}
 .mobile-menu{display:none;position:fixed;top:46px;left:0;right:0;background:#fff;border-bottom:1px solid #111;z-index:99;padding:0 20px;}
@@ -133,6 +134,8 @@ body{padding-bottom:42px;}
 .mobile-menu a:last-child{border-bottom:none;}
 
 @media(max-width:768px){
+  .lang-long{display:none;}
+  .lang-short{display:inline;}
   .nav-l a{display:none;}
   .hamburger{display:block;}
   .nav-r a{display:none;}
@@ -179,7 +182,7 @@ body{padding-bottom:42px;}
     </a>
   </div>
   <div class="nav-r">
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-vi">Việt Nam</span> / <span class="lang-en">English</span></button>
+    <button class="lang-btn" onclick="toggleLang()"><span class="lang-vi"><span class="lang-long">Việt Nam</span><span class="lang-short">VI</span></span> / <span class="lang-en"><span class="lang-long">English</span><span class="lang-short">EN</span></span></button>
     <a href="https://www.instagram.com/karaoke.jewelry/" target="_blank">instagram</a>
     <span class="nav-sep">|</span>
     <button class="cart-btn" onclick="toggleCart()">
