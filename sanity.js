@@ -62,8 +62,18 @@ function sanityImageUrl(imageField, {w, h, fit} = {}) {
   return `${base}?${params}`;
 }
 
+const _CAT_EN = {'Nhẫn':'Ring','Bông tai':'Earrings','Dây Chuyền':'Necklace','Vòng Tay':'Bracelet','Charm':'Charm'};
+function _autoNameEn(name, cat) {
+  const en = _CAT_EN[cat];
+  if (!en) return name;
+  if (name.startsWith(cat + ' ')) return name.slice(cat.length + 1) + ' ' + en;
+  if (name.endsWith(' ' + cat)) return name.slice(0, -(cat.length + 1)) + ' ' + en;
+  return name + ' ' + en;
+}
+
 function normalizeProduct(p) {
-  const name = (_lang === 'en' && p.name_en) ? p.name_en : p.name;
+  const name = (_lang === 'en' && p.name_en) ? p.name_en :
+               (_lang === 'en') ? _autoNameEn(p.name, p.category) : p.name;
   const description = (_lang === 'en' && p.description_en) ? p.description_en : (p.description || '');
   return {
     id: p._id,
