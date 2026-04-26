@@ -212,19 +212,20 @@ let cart = [];
 let cartOpen = false;
 let activeFilter = 'all';
 
-function imgTag(src, alt) {
+function imgTag(src, alt, eager) {
   if (!src) return `<div class="img-placeholder"><img src="Brand Asset/logo/SYMBOL_LOGO_BLACK0.png" alt=""></div>`;
-  return `<img src="${src}" alt="${alt}" loading="lazy">`;
+  return `<img src="${src}" alt="${alt}"${eager ? ' fetchpriority="high"' : ' loading="lazy"'}>`;
 }
 
 function renderGrid() {
-  document.getElementById('prodGrid').innerHTML = products.map(p => {
+  document.getElementById('prodGrid').innerHTML = products.map((p, i) => {
     const show = activeFilter === 'all' || p.cat === activeFilter;
     const hasHover = p.imgB && p.imgB !== p.imgA;
+    const eager = i < 4;
     return `
       <div class="prod-card${show ? '' : ' hidden'}" onclick="location.href='product.html?id=${p.id}'">
         <div class="prod-img">
-          <div class="img-default">${imgTag(p.imgA, p.name)}</div>
+          <div class="img-default">${imgTag(p.imgA, p.name, eager)}</div>
           ${hasHover ? `<div class="img-hover"><img src="${p.imgB}" alt="${p.name}" loading="lazy"></div>` : ''}
           <div class="prod-label">
             <span class="prod-name">${p.name}</span>
