@@ -297,11 +297,30 @@ async function init() {
   _rawProduct = raw;
   product = normalizeProduct(raw);
   document.title = product.name + ' — KARAOKE JEWELRY';
-  const ogImg = product.imgA || 'https://www.karaoke-jewelry.com/Brand Asset/logo/LOGO_VUONG_BLACK.png';
+  const ogImg = product.imgA || 'https://www.karaoke-jewelry.com/Brand%20Asset/logo/LOGO_VUONG_BLACK.png';
   document.querySelector('meta[property="og:title"]').setAttribute('content', product.name + ' — KARAOKE JEWELRY');
   document.querySelector('meta[property="og:description"]').setAttribute('content', product.description || 'Bạc 925, thiết kế độc quyền KARAOKE JEWELRY.');
   document.querySelector('meta[property="og:image"]').setAttribute('content', ogImg);
   document.querySelector('meta[name="description"]').setAttribute('content', product.description || product.name + ' — bạc 925 thiết kế độc quyền KARAOKE JEWELRY.');
+  const ldScript = document.createElement('script');
+  ldScript.type = 'application/ld+json';
+  ldScript.text = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": ogImg,
+    "description": product.description || 'Bạc 925, thiết kế độc quyền KARAOKE JEWELRY.',
+    "brand": {"@type": "Brand", "name": "KARAOKE JEWELRY"},
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "VND",
+      "price": product.priceRaw,
+      "availability": "https://schema.org/InStock",
+      "url": window.location.href,
+      "seller": {"@type": "Organization", "name": "KARAOKE JEWELRY"}
+    }
+  });
+  document.head.appendChild(ldScript);
 
   const related = await sanityFetch(
     `*[_type=="product"&&category=="${raw.category}"&&_id!="${urlId}"&&isVisible!=false]|order(sortOrder asc)[0..3]{_id,name,name_en,price,imgA,imgB,imageA,imageB}`
