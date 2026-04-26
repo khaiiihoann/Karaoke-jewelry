@@ -92,8 +92,8 @@ function normalizeProduct(p) {
     price: formatPrice(p.price),
     priceRaw: p.price,
     sizes: p.sizes || [],
-    imgA: p.imageA ? sanityImageUrl(p.imageA, {w: '800'}) : (p.imgA || ''),
-    imgB: p.imageB ? sanityImageUrl(p.imageB, {w: '800'}) : (p.imgB || ''),
+    imgA: p.imageA ? sanityImageUrl(p.imageA, {w: '600'}) : (p.imgA || ''),
+    imgB: p.imageB ? sanityImageUrl(p.imageB, {w: '600'}) : (p.imgB || ''),
     description,
     gallery: (p.gallery || []).map(img => sanityImageUrl(img, {w: '1200'})).filter(Boolean),
   };
