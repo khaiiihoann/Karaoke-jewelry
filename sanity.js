@@ -92,6 +92,7 @@ function normalizeProduct(p) {
     price: formatPrice(p.price),
     priceRaw: p.price,
     sizes: p.sizes || [],
+    variants: p.variants || [],
     imgA: p.imageA ? sanityImageUrl(p.imageA, {w: '600'}) : (p.imgA || ''),
     imgB: p.imageB ? sanityImageUrl(p.imageB, {w: '600'}) : (p.imgB || ''),
     description,

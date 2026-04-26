@@ -129,6 +129,26 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'variants',
+      title: 'Variants (size + giá riêng)',
+      description: 'Dùng khi mỗi size có giá khác nhau. Nếu điền, thay thế "Size có sẵn" và "Giá" ở trên.',
+      type: 'array',
+      group: 'details',
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({name: 'size', title: 'Size', type: 'string', validation: Rule => Rule.required()}),
+          defineField({name: 'price', title: 'Giá (VNĐ)', type: 'number', validation: Rule => Rule.required().min(0)}),
+        ],
+        preview: {
+          select: {title: 'size', subtitle: 'price'},
+          prepare({title, subtitle}: {title: string; subtitle: number}) {
+            return {title: `Size ${title}`, subtitle: subtitle ? subtitle.toLocaleString('vi-VN') + '₫' : ''}
+          }
+        }
+      }],
+    }),
+    defineField({
       name: 'isFeatured',
       title: 'Hiển thị trên trang chủ',
       description: 'Tick để xuất hiện trong mục "Popular" trên homepage',

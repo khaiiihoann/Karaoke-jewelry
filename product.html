@@ -8,9 +8,10 @@
 <meta property="og:type" content="product">
 <meta property="og:title" content="KARAOKE JEWELRY">
 <meta property="og:description" content="Trang sức bạc 925 thiết kế độc quyền, làm thủ công tại Việt Nam.">
-<meta property="og:image" content="https://www.karaoke-jewelry.com/Brand Asset/logo/LOGO_VUONG_BLACK.png">
+<meta property="og:image" content="https://www.karaoke-jewelry.com/Brand%20Asset/logo/LOGO_VUONG_BLACK.png">
 <meta property="og:url" content="https://www.karaoke-jewelry.com/product.html">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/Brand%20Asset/logo/LOGO_VUONG_BLACK.png" type="image/png">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;background:#fff;color:#111;width:100%;}
@@ -255,7 +256,11 @@ window.addEventListener('langchange', () => {
   const priceEl = document.querySelector('.product-price');
   const descEl = document.querySelector('.product-desc');
   if (nameEl) nameEl.textContent = product.name;
-  if (priceEl) priceEl.textContent = product.price;
+  if (priceEl) {
+    const sizeBtn = document.querySelector('.size-btn.selected');
+    const priceRaw = sizeBtn?.dataset.price ? parseInt(sizeBtn.dataset.price) : product.priceRaw;
+    priceEl.textContent = formatPrice(priceRaw);
+  }
   if (descEl) descEl.textContent = product.description || catDesc[getLang()][product.cat] || '';
   document.querySelectorAll('.rel-price').forEach((el, i) => {
     if (_rawRelated[i]) el.textContent = formatPrice(_rawRelated[i].price);
@@ -277,7 +282,7 @@ init();
 async function init() {
   const urlId = new URLSearchParams(location.search).get('id');
   const [raw, settings] = await Promise.all([
-    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,name_en,price,category,sizes,imgA,imgB,imageA,imageB,description,description_en,gallery[]}`),
+    sanityFetch(`*[_type=="product"&&_id=="${urlId}"&&isVisible!=false][0]{_id,name,name_en,price,category,sizes,variants,imgA,imgB,imageA,imageB,description,description_en,gallery[]}`),
     sanityFetch('*[_type=="settings"][0]{notifBarVi,notifBarEn,instagramUrl,navLeft,navRight,footerLinks}')
   ]);
 
@@ -320,12 +325,18 @@ async function init() {
     ? `<button class="gallery-arrow prev" onclick="slide(-1)">&#8592;</button><button class="gallery-arrow next" onclick="slide(1)">&#8594;</button>`
     : '';
 
-  const sizeHTML = product.sizes.length
-    ? `<div class="selector-label">size</div>
-       <div class="size-grid">${product.sizes.map((s, i) =>
-         `<button class="size-btn${i === 0 ? ' selected' : ''}" onclick="selectSize(this)">${s}</button>`
-       ).join('')}</div>`
-    : '';
+  let sizeHTML = '';
+  if (raw.variants?.length) {
+    sizeHTML = `<div class="selector-label">size</div>
+      <div class="size-grid">${raw.variants.map((v, i) =>
+        `<button class="size-btn${i === 0 ? ' selected' : ''}" data-price="${v.price}" onclick="selectSize(this)">${v.size}</button>`
+      ).join('')}</div>`;
+  } else if (product.sizes.length) {
+    sizeHTML = `<div class="selector-label">size</div>
+      <div class="size-grid">${product.sizes.map((s, i) =>
+        `<button class="size-btn${i === 0 ? ' selected' : ''}" onclick="selectSize(this)">${s}</button>`
+      ).join('')}</div>`;
+  }
 
   const relatedHTML = relatedNorm.length
     ? `<div class="related-section">
@@ -358,7 +369,7 @@ async function init() {
       <div class="info-side">
         <div class="info-top">
           <span class="product-name">${product.name}</span>
-          <span class="product-price">${product.price}</span>
+          <span class="product-price">${raw.variants?.length ? formatPrice(raw.variants[0].price) : product.price}</span>
         </div>
         <div class="tax-note">Tax included. Shipping calculated at checkout.</div>
         <p class="product-desc">${product.description || catDesc[getLang()][product.cat] || ''}</p>
@@ -468,6 +479,9 @@ function slide(dir) { goSlide(currentSlide + dir); }
 function selectSize(btn) {
   btn.closest('.size-grid').querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
+  if (btn.dataset.price) {
+    document.querySelector('.product-price').textContent = formatPrice(parseInt(btn.dataset.price));
+  }
 }
 
 // ─── CART ────────────────────────────────────────────────────────────────────
@@ -478,11 +492,12 @@ function addToCartProduct() {
   if (!product) return;
   const sizeBtn = document.querySelector('.size-btn.selected');
   const size = sizeBtn ? sizeBtn.textContent : null;
+  const priceRaw = sizeBtn?.dataset.price ? parseInt(sizeBtn.dataset.price) : product.priceRaw;
   const key = `${product.id}-${size || 'one-size'}`;
   const label = size ? `${product.name} (${size})` : product.name;
   const ex = cart.find(x => x.key === key);
   if (ex) ex.qty++;
-  else cart.push({ key, name: label, price: product.price, priceRaw: product.priceRaw, img: product.imgA, qty: 1 });
+  else cart.push({ key, name: label, price: formatPrice(priceRaw), priceRaw, img: product.imgA, qty: 1 });
   updateBadge();
   showToast();
 }
