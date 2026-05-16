@@ -54,6 +54,15 @@ export default defineType({
       group: 'homepage',
       options: {accept: 'video/*'},
     }),
+    defineField({
+      name: 'storeImages',
+      title: 'Ảnh Store (floating)',
+      description: 'Tối đa 6 ảnh, hiển thị floating quanh trang Store.',
+      type: 'array',
+      group: 'homepage',
+      of: [{type: 'image', options: {hotspot: true}}],
+      validation: Rule => Rule.max(6),
+    }),
 
     // ── Navbar ───────────────────────────────────────────────────────────────
     defineField({

@@ -21,7 +21,10 @@
       "mcp__Sanity__patch_document_from_json",
       "mcp__Sanity__publish_documents",
       "mcp__Sanity__query_documents",
-      "Bash(npx sanity *)"
+      "Bash(npx sanity *)",
+      "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" add index.html sanity.js karaoke-jewelry/schemaTypes/settings.ts karaoke-jewelry/sanity.cli.ts)",
+      "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" commit -m \"feat\\(hero\\): replace image with video support via Sanity file field\")",
+      "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" push origin main)"
     ]
   }
 }
