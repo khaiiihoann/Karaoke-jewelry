@@ -46,6 +46,14 @@ export default defineType({
       type: 'url',
       group: 'homepage',
     }),
+    defineField({
+      name: 'heroVideo',
+      title: 'Hero Video',
+      description: 'Video nền trang chủ (MP4). Nếu có video sẽ ưu tiên hơn ảnh.',
+      type: 'file',
+      group: 'homepage',
+      options: {accept: 'video/*'},
+    }),
 
     // ── Navbar ───────────────────────────────────────────────────────────────
     defineField({

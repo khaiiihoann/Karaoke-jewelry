@@ -214,7 +214,13 @@ function applySettings(settings) {
     _applyFooterLinks(settings.footerLinks);
   }
 
-  if (settings.heroImage || settings.heroImageUrl) {
+  if (settings.heroVideo?.asset?.url) {
+    const vid = document.getElementById('heroVideo');
+    if (vid) {
+      vid.src = settings.heroVideo.asset.url;
+      vid.style.display = 'block';
+    }
+  } else if (settings.heroImage || settings.heroImageUrl) {
     const hero = document.querySelector('.hero');
     if (hero) {
       const url = settings.heroImage ? sanityImageUrl(settings.heroImage) : settings.heroImageUrl;
