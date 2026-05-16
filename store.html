@@ -198,6 +198,7 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
     el.alt = 'Store';
     el.width = w;
     el.height = h;
+    el.draggable = false;
     div.appendChild(el);
     stage.appendChild(div);
 
@@ -225,12 +226,17 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
     div.addEventListener('mousedown', e => {
       e.preventDefault();
       clearTimeout(driftTimer);
-      div.style.transition = 'none';
-      div.style.zIndex = '50';
+      // read current visual position BEFORE killing transition
       const matrix = new DOMMatrix(getComputedStyle(div).transform);
       const ox = matrix.m41, oy = matrix.m42;
-      const mx = e.clientX,  my = e.clientY;
+      curX = ox; curY = oy;
+      // now freeze element at current visual position
+      div.style.transition = 'none';
+      div.style.transform = `translate(${ox}px,${oy}px) rotate(${curR}deg)`;
+      div.style.zIndex = '50';
+      const mx = e.clientX, my = e.clientY;
 
+      document.body.style.userSelect = 'none';
       function onMove(e) {
         curX = ox + e.clientX - mx;
         curY = oy + e.clientY - my;
@@ -238,9 +244,10 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
       }
       function onUp() {
         div.style.zIndex = '';
+        document.body.style.userSelect = '';
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
-        driftTimer = setTimeout(drift, 3000); // resume after 3s idle
+        driftTimer = setTimeout(drift, 3000);
       }
       document.addEventListener('mousemove', onMove);
       document.addEventListener('mouseup', onUp);
