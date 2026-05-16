@@ -61,10 +61,10 @@ a,a:visited{color:inherit;text-decoration:none;}
 
 /* ── Floating store images ─────────────────────────────────────────────── */
 .float-stage{position:fixed;inset:0;pointer-events:none;z-index:0;}
-.float-img{position:absolute;border-radius:16px;border:1px solid #111;overflow:hidden;}
-.float-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.float-img{position:absolute;top:0;left:0;border-radius:16px;border:1px solid #111;overflow:hidden;will-change:transform;}
+.float-img img{display:block;width:100%;height:100%;object-fit:cover;}
 
-@media(max-width:1200px){.float-img{display:none;}}
+@media(max-width:1200px){.float-stage{display:none;}}
 
 @media(max-width:768px){
   .lang-long{display:none;}
@@ -156,14 +156,50 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
   const imgs = data?.storeImages || [];
   const stage = document.getElementById('floatStage');
   if (!stage || !imgs.length) return;
-  imgs.slice(0, 6).forEach(img => {
+
+  const sizes = [
+    [260,312],[234,286],[221,260],[273,325],[241,293],[228,273]
+  ];
+
+  imgs.slice(0, 6).forEach((img, i) => {
+    const [w, h] = sizes[i] || [240, 290];
     const div = document.createElement('div');
     div.className = 'float-img';
+    div.style.width = w + 'px';
+    div.style.height = h + 'px';
     const el = document.createElement('img');
     el.src = img.asset.url;
     el.alt = 'Store';
     div.appendChild(el);
     stage.appendChild(div);
+
+    // random position within viewport
+    function rndPos() {
+      return {
+        x: Math.random() * (window.innerWidth  - w),
+        y: Math.random() * (window.innerHeight - h),
+        r: (Math.random() - 0.5) * 10
+      };
+    }
+
+    // place instantly at random start
+    const init = rndPos();
+    div.style.left = init.x + 'px';
+    div.style.top  = init.y + 'px';
+    div.style.transform = `rotate(${init.r}deg)`;
+
+    function drift() {
+      const p = rndPos();
+      const dur = 8 + Math.random() * 5; // 8–13s per move
+      div.style.transition = `left ${dur}s cubic-bezier(0.45,0.05,0.55,0.95), top ${dur}s cubic-bezier(0.45,0.05,0.55,0.95), transform ${dur}s ease-in-out`;
+      div.style.left = p.x + 'px';
+      div.style.top  = p.y + 'px';
+      div.style.transform = `rotate(${p.r}deg)`;
+      setTimeout(drift, dur * 1000);
+    }
+
+    // stagger start so they don't all move at once
+    setTimeout(drift, i * 1200);
   });
 });
 </script>
