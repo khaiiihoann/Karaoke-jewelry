@@ -161,45 +161,67 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
     [260,312],[234,286],[221,260],[273,325],[241,293],[228,273]
   ];
 
+  const GAP = 30; // px clearance from content edge
+
+  function getContentRect() {
+    const wrap = document.querySelector('.page-wrap');
+    return wrap ? wrap.getBoundingClientRect() : null;
+  }
+
+  function safePos(w, h) {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const rect = getContentRect();
+    const leftBound  = rect ? rect.left  - GAP : vw * 0.1;
+    const rightBound = rect ? rect.right + GAP : vw * 0.9;
+    // two zones: left margin and right margin
+    const leftW  = Math.max(0, leftBound - w);
+    const rightW = Math.max(0, vw - w - rightBound);
+    let x;
+    if (leftW <= 0 && rightW <= 0) {
+      x = Math.random() * (vw - w); // fallback: anywhere
+    } else {
+      const useLeft = rightW <= 0 || (leftW > 0 && Math.random() < leftW / (leftW + rightW));
+      x = useLeft ? Math.random() * leftW : rightBound + Math.random() * rightW;
+    }
+    return { x, y: Math.random() * Math.max(0, vh - h), r: (Math.random() - 0.5) * 10 };
+  }
+
+  function offscreenPos(w, h) {
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const side = Math.floor(Math.random() * 4);
+    if (side === 0) return { x: -w - 10, y: Math.random() * vh };
+    if (side === 1) return { x: vw + 10,  y: Math.random() * vh };
+    if (side === 2) return { x: Math.random() * vw, y: -h - 10 };
+                    return { x: Math.random() * vw, y: vh + 10  };
+  }
+
   imgs.slice(0, 6).forEach((img, i) => {
     const [w, h] = sizes[i] || [240, 290];
     const div = document.createElement('div');
     div.className = 'float-img';
-    div.style.width = w + 'px';
-    div.style.height = h + 'px';
+    div.style.cssText = `width:${w}px;height:${h}px;`;
     const el = document.createElement('img');
     el.src = img.asset.url;
     el.alt = 'Store';
+    el.width = w;
+    el.height = h;
     div.appendChild(el);
     stage.appendChild(div);
 
-    // random position within viewport
-    function rndPos() {
-      return {
-        x: Math.random() * (window.innerWidth  - w),
-        y: Math.random() * (window.innerHeight - h),
-        r: (Math.random() - 0.5) * 10
-      };
-    }
-
-    // place instantly at random start
-    const init = rndPos();
-    div.style.left = init.x + 'px';
-    div.style.top  = init.y + 'px';
-    div.style.transform = `rotate(${init.r}deg)`;
+    // start off-screen instantly
+    const s = offscreenPos(w, h);
+    div.style.transform = `translate(${s.x}px,${s.y}px) rotate(0deg)`;
 
     function drift() {
-      const p = rndPos();
-      const dur = 8 + Math.random() * 5; // 8–13s per move
-      div.style.transition = `left ${dur}s cubic-bezier(0.45,0.05,0.55,0.95), top ${dur}s cubic-bezier(0.45,0.05,0.55,0.95), transform ${dur}s ease-in-out`;
-      div.style.left = p.x + 'px';
-      div.style.top  = p.y + 'px';
-      div.style.transform = `rotate(${p.r}deg)`;
+      const p = safePos(w, h);
+      const dur = 8 + Math.random() * 5;
+      div.style.transition = `transform ${dur}s cubic-bezier(0.45,0.05,0.55,0.95)`;
+      div.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg)`;
       setTimeout(drift, dur * 1000);
     }
 
-    // stagger start so they don't all move at once
-    setTimeout(drift, i * 1200);
+    // stagger entry: 0.8s apart
+    setTimeout(drift, 300 + i * 800);
   });
 });
 </script>
