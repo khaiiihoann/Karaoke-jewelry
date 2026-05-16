@@ -63,7 +63,7 @@ a,a:visited{color:inherit;text-decoration:none;}
 .float-stage{position:fixed;inset:0;pointer-events:none;z-index:0;}
 .float-img{position:absolute;top:0;left:0;border-radius:16px;border:1px solid #111;overflow:hidden;will-change:transform;pointer-events:auto;cursor:grab;}
 .float-img:active{cursor:grabbing;}
-.float-img img{display:block;width:100%;height:100%;object-fit:cover;}
+.float-img img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none;-webkit-user-drag:none;}
 
 @media(max-width:1200px){.float-stage{display:none;}}
 
@@ -162,27 +162,19 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
     [260,312],[234,286],[221,260],[273,325],[241,293],[228,273]
   ];
 
-  const GAP = 30; // px clearance from content edge
-
-  function getContentRect() {
-    const wrap = document.querySelector('.page-wrap');
-    return wrap ? wrap.getBoundingClientRect() : null;
-  }
+  const GAP = 30;
 
   function safePos(w, h) {
     const vw = window.innerWidth, vh = window.innerHeight;
-    const rect = getContentRect();
-    const leftBound  = rect ? rect.left  - GAP : vw * 0.1;
-    const rightBound = rect ? rect.right + GAP : vw * 0.9;
-    // two zones: left margin and right margin
-    const leftW  = Math.max(0, leftBound - w);
-    const rightW = Math.max(0, vw - w - rightBound);
+    const wrap = document.querySelector('.page-wrap');
+    const rect = wrap ? wrap.getBoundingClientRect() : {left: vw*0.2, right: vw*0.8};
+    const leftW  = Math.max(0, rect.left  - GAP - w);
+    const rightW = Math.max(0, vw - w - rect.right - GAP);
     let x;
-    if (leftW <= 0 && rightW <= 0) {
-      x = Math.random() * (vw - w); // fallback: anywhere
-    } else {
+    if (leftW <= 0 && rightW <= 0) { x = Math.random() * (vw - w); }
+    else {
       const useLeft = rightW <= 0 || (leftW > 0 && Math.random() < leftW / (leftW + rightW));
-      x = useLeft ? Math.random() * leftW : rightBound + Math.random() * rightW;
+      x = useLeft ? Math.random() * leftW : (rect.right + GAP) + Math.random() * rightW;
     }
     return { x, y: Math.random() * Math.max(0, vh - h), r: (Math.random() - 0.5) * 10 };
   }
@@ -209,20 +201,50 @@ sanityFetch('*[_type=="settings"][0]{storeImages[]{asset->{url}}}').then(data =>
     div.appendChild(el);
     stage.appendChild(div);
 
-    // start off-screen instantly
+    let curX, curY, curR = 0, driftTimer = null;
+
+    // place off-screen instantly
     const s = offscreenPos(w, h);
-    div.style.transform = `translate(${s.x}px,${s.y}px) rotate(0deg)`;
+    curX = s.x; curY = s.y;
+    div.style.transition = 'none';
+    div.style.transform = `translate(${curX}px,${curY}px) rotate(0deg)`;
 
     function drift() {
       const p = safePos(w, h);
+      curX = p.x; curY = p.y; curR = p.r;
       const dur = 8 + Math.random() * 5;
       div.style.transition = `transform ${dur}s cubic-bezier(0.45,0.05,0.55,0.95)`;
-      div.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg)`;
-      setTimeout(drift, dur * 1000);
+      div.style.transform = `translate(${curX}px,${curY}px) rotate(${curR}deg)`;
+      driftTimer = setTimeout(drift, dur * 1000);
     }
 
-    // stagger entry: 0.8s apart
-    setTimeout(drift, 300 + i * 800);
+    // all fly in immediately on load
+    requestAnimationFrame(() => requestAnimationFrame(drift));
+
+    // ── Drag ──────────────────────────────────────────────────────────────
+    div.addEventListener('mousedown', e => {
+      e.preventDefault();
+      clearTimeout(driftTimer);
+      div.style.transition = 'none';
+      div.style.zIndex = '50';
+      const matrix = new DOMMatrix(getComputedStyle(div).transform);
+      const ox = matrix.m41, oy = matrix.m42;
+      const mx = e.clientX,  my = e.clientY;
+
+      function onMove(e) {
+        curX = ox + e.clientX - mx;
+        curY = oy + e.clientY - my;
+        div.style.transform = `translate(${curX}px,${curY}px) rotate(${curR}deg)`;
+      }
+      function onUp() {
+        div.style.zIndex = '';
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+        driftTimer = setTimeout(drift, 3000); // resume after 3s idle
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
   });
 });
 </script>
