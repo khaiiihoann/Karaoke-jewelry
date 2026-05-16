@@ -24,7 +24,9 @@
       "Bash(npx sanity *)",
       "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" add index.html sanity.js karaoke-jewelry/schemaTypes/settings.ts karaoke-jewelry/sanity.cli.ts)",
       "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" commit -m \"feat\\(hero\\): replace image with video support via Sanity file field\")",
-      "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" push origin main)"
+      "Bash(git -C \"d:/Work/2024/kara/Claude_KARA_WEBSITE\" push origin main)",
+      "Bash(sed -i 's/\\\\.nav-logo img{height:22px;display:block;}/\\\\.nav-logo img{height:22px;width:auto;display:block;}/g' product.html shop.html policies.html store.html)",
+      "Bash(sed -i 's/\\\\.nav-logo img{height:17px;}/\\\\.nav-logo img{height:17px;width:auto;}/g' product.html shop.html)"
     ]
   }
 }
