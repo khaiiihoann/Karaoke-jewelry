@@ -147,7 +147,11 @@ body{padding-bottom:42px;}
   .nav{justify-content:space-between;}
   .nav-logo img{height:17px;width:auto;}
   .product-wrap{flex-direction:column;}
-  .gallery-side{position:relative;top:0;height:130vw;flex:none;border-right:none;border-bottom:1px solid #111;}
+  .gallery-side{position:relative;top:0;height:auto;flex:none;border-right:none;border-bottom:1px solid #111;}
+  .gallery-main{display:flex;overflow-x:scroll;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .gallery-main::-webkit-scrollbar{display:none;}
+  .gallery-slide{position:relative;inset:auto;flex:0 0 100%;width:100%;opacity:1!important;transition:none;scroll-snap-align:start;}
+  .gallery-slide img{width:100%;height:auto;object-fit:contain;}
   .gallery-arrow{display:none;}
   .info-side{padding:20px 18px 24px;}
   .related-grid{grid-template-columns:repeat(2,1fr);}
