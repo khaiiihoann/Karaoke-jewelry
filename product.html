@@ -425,6 +425,20 @@ async function init() {
     </div>
   `;
   setupZoom();
+  setupSwipe();
+}
+
+function setupSwipe() {
+  const el = document.getElementById('galleryMain');
+  if (!el) return;
+  let startX = null;
+  el.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, {passive: true});
+  el.addEventListener('touchend', e => {
+    if (startX === null) return;
+    const diff = startX - e.changedTouches[0].pageX;
+    if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
+    startX = null;
+  }, {passive: true});
 }
 
 // ─── IMAGE ZOOM ──────────────────────────────────────────────────────────────
@@ -500,19 +514,6 @@ function goSlide(n) {
 }
 function slide(dir) { goSlide(currentSlide + dir); }
 
-// ─── SWIPE ───────────────────────────────────────────────────────────────────
-(function() {
-  const el = document.getElementById('galleryMain');
-  if (!el) return;
-  let startX = null;
-  el.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, {passive: true});
-  el.addEventListener('touchend', e => {
-    if (startX === null) return;
-    const diff = startX - e.changedTouches[0].pageX;
-    if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
-    startX = null;
-  }, {passive: true});
-})();
 
 // ─── SELECTORS ───────────────────────────────────────────────────────────────
 function selectSize(btn) {
