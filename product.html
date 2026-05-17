@@ -162,7 +162,6 @@ body{padding-bottom:42px;}
   .notif-inner span{font-size:10px;margin:0 16px;}
 }
 @media(max-width:480px){
-  .gallery-side{height:100vw;}
   .product-name{font-size:14px;letter-spacing:.1em;}
   .product-price{font-size:13px;}
   .info-side{padding:16px 14px 40px;}
@@ -435,13 +434,13 @@ async function init() {
 function setupSwipe() {
   const el = document.getElementById('galleryMain');
   if (!el) return;
-  let startX = null;
-  el.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, {passive: true});
-  el.addEventListener('touchend', e => {
-    if (startX === null) return;
-    const diff = startX - e.changedTouches[0].pageX;
-    if (Math.abs(diff) > 50) slide(diff > 0 ? 1 : -1);
-    startX = null;
+  // scroll-snap handles swipe natively on mobile; just sync dots
+  el.addEventListener('scroll', () => {
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx !== currentSlide) {
+      document.querySelectorAll('.gallery-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+      currentSlide = idx;
+    }
   }, {passive: true});
 }
 
