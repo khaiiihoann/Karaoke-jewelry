@@ -429,6 +429,7 @@ async function init() {
 
 // ─── IMAGE ZOOM ──────────────────────────────────────────────────────────────
 function setupZoom() {
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
   const gallerySide = document.querySelector('.gallery-side');
   if (!gallerySide) return;
 
